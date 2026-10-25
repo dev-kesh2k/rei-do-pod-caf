@@ -4,6 +4,7 @@ import { logoUrl, useCatalog, waLink, type Settings as S } from '../../lib/catal
 import { resizeImage } from '../../lib/image';
 import { useToast } from '../../components/Toast';
 import { useTitulo } from '../../components/Site';
+import WhatsappAvisos from './WhatsappAvisos';
 
 function Bloco({ titulo, children, texto }: { titulo: string; texto?: string; children: React.ReactNode }) {
   return (
@@ -54,7 +55,8 @@ export default function Settings() {
     if (!s) return;
     setSalvando(true);
     try {
-      const r = await api<{ settings: S }>('admin/settings', { method: 'PUT', body: s });
+      const { whatsapp, msgHelp, bannerTitle, bannerText, pixKey } = s; // avisos têm bloco próprio
+      const r = await api<{ settings: S }>('admin/settings', { method: 'PUT', body: { whatsapp, msgHelp, bannerTitle, bannerText, pixKey } });
       setS(r.settings);
       toast('Ajustes salvos');
       reload();
@@ -134,6 +136,8 @@ export default function Settings() {
           </div>
         </Bloco>
       </form>
+
+      <WhatsappAvisos />
 
       <form onSubmit={salvar}>
         <Bloco titulo="Banner do início" texto="Título grande e texto do topo da loja. A última palavra do título fica dourada.">

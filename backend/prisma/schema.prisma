@@ -143,3 +143,19 @@ model OrderItem {
 
   @@index([orderId])
 }
+
+// Histórico dos avisos enviados pela ponte de WhatsApp (fica mesmo se o pedido for apagado).
+model WhatsappLog {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  kind        String // pedido | cancelamento | reenvio | teste
+  orderId     String?
+  orderNumber Int?
+  to          String
+  ok          Boolean
+  error       String   @default("")
+  messageId   String   @default("")
+
+  @@index([createdAt])
+  @@index([orderId])
+}

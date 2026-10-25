@@ -9,6 +9,7 @@ import { useToast } from '../../components/Toast';
 import { useTitulo } from '../../components/Site';
 import { IconPino, IconTelefone, IconVoltar, IconWhatsApp } from '../../components/icons';
 import { PROXIMO } from './Orders';
+import { HistoricoWhats, type WaStatus } from './WhatsappAvisos';
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -18,6 +19,8 @@ export default function OrderDetail() {
   const [cancelando, setCancelando] = useState(false);
   const [motivo, setMotivo] = useState('');
   const [salvando, setSalvando] = useState(false);
+  const [wa, setWa] = useState<WaStatus | null>(null);
+  const [reenviando, setReenviando] = useState(false);
   useTitulo(p ? `Pedido ${numero(p.number)} — Painel` : 'Pedido — Painel');
 
   const carregar = useCallback(async () => {
@@ -28,9 +31,28 @@ export default function OrderDetail() {
       setErro(errorText(e, 'Não foi possível carregar o pedido'));
     }
   }, [id]);
+  const carregarWa = useCallback(() => {
+    api<WaStatus>(`admin/whatsapp?orderId=${id}`)
+      .then(setWa)
+      .catch(() => {});
+  }, [id]);
   useEffect(() => {
     carregar();
-  }, [carregar]);
+    carregarWa();
+  }, [carregar, carregarWa]);
+
+  async function reenviar() {
+    setReenviando(true);
+    try {
+      const r = await api<{ ok: boolean; error: string }>(`admin/orders/${id}/notify`, { method: 'POST' });
+      toast(r.ok ? 'Aviso reenviado no WhatsApp' : `Não enviou: ${r.error}`, !r.ok);
+      carregarWa();
+    } catch (e) {
+      toast(errorText(e), true);
+    } finally {
+      setReenviando(false);
+    }
+  }
 
   async function alterar(body: Record<string, unknown>, msg: string) {
     setSalvando(true);
@@ -59,7 +81,7 @@ export default function OrderDetail() {
   if (!p) return <div className="adm-card h-96 animate-pulse" />;
 
   const prox = PROXIMO[p.status];
-  const wa = `https://wa.me/55${p.phoneKey}?text=${encodeURIComponent(`Olá, ${p.customerName.split(' ')[0]}! Aqui é do Rei do Pod Caf, sobre o seu pedido ${numero(p.number)}.`)}`;
+  const waCliente = `https://wa.me/55${p.phoneKey}?text=${encodeURIComponent(`Olá, ${p.customerName.split(' ')[0]}! Aqui é do Rei do Pod Caf, sobre o seu pedido ${numero(p.number)}.`)}`;
   const temPino = p.latitude != null && p.longitude != null;
   const mapa = temPino
     ? mapaUrl(p.latitude!, p.longitude!)
@@ -137,7 +159,7 @@ export default function OrderDetail() {
                 <IconTelefone className="h-4 w-4" />
                 Ligar
               </a>
-              <a href={wa} target="_blank" rel="noopener noreferrer" className="adm-btn bg-[#25d366] px-3 font-bold text-white">
+              <a href={waCliente} target="_blank" rel="noopener noreferrer" className="adm-btn bg-[#25d366] px-3 font-bold text-white">
                 <IconWhatsApp className="h-5 w-5" />
                 WhatsApp
               </a>
@@ -155,6 +177,18 @@ export default function OrderDetail() {
               </div>
               <Switch checked={p.paid} disabled={salvando} onChange={(v) => alterar({ paid: v }, v ? 'Marcado como pago' : 'Marcado como não pago')} label="Pedido pago" />
             </div>
+          </section>
+
+          <section className="adm-card space-y-3 p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="font-display text-2xl font-extrabold uppercase">Aviso no WhatsApp</h2>
+            </div>
+            {wa && !wa.configured && <p className="rounded-xl bg-amber-500/10 px-3 py-2 text-xs text-amber-200">WhatsApp não configurado.</p>}
+            {wa && <HistoricoWhats logs={wa.logs} mostrarPedido={false} />}
+            <button type="button" disabled={reenviando} className="adm-btn adm-btn-ghost w-full px-4" onClick={reenviar}>
+              <IconWhatsApp className="h-5 w-5 text-[#5be08f]" />
+              {reenviando ? 'Enviando…' : 'Reenviar aviso do pedido'}
+            </button>
           </section>
 
           {p.status !== 'cancelado' && (

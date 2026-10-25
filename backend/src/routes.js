@@ -34,8 +34,10 @@ api.get(
     const count = new Map();
     for (const p of products) count.set(p.brandId, (count.get(p.brandId) || 0) + 1);
     noStore(res);
+    // Número e chave dos avisos são só do painel.
+    const { notifyWhatsapp: _n, notifyEnabled: _e, ...publicSettings } = settings;
     res.json({
-      settings,
+      settings: publicSettings,
       logoVersion: logo?.version ?? 0,
       categories: brands.filter((b) => count.get(b.id)).map((b) => ({ name: b.name, kind: b.kind, count: count.get(b.id) })),
       products: products.map((p) => {

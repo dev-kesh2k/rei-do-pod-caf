@@ -316,6 +316,12 @@ admin.put(
       bannerText: 'Texto do banner',
       pixKey: 'Chave Pix',
     };
+    if ('notifyWhatsapp' in body) {
+      const d = String(body.notifyWhatsapp || '').replace(/\D/g, '');
+      if (d && (d.length < 10 || d.length > 13)) throw new HttpError(400, 'WhatsApp para avisos inválido: use DDD + número (ex.: 554598078084)');
+      updates.notifyWhatsapp = d;
+    }
+    if ('notifyEnabled' in body) updates.notifyEnabled = bool(body.notifyEnabled) ? '1' : '0';
     for (const [k, max] of Object.entries(limits)) {
       if (k in body) updates[k] = text(body[k], labels[k], { max, required: k !== 'pixKey' });
     }

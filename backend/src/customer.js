@@ -1,6 +1,7 @@
 import express from 'express';
 import { prisma, wrap, HttpError, text, limit, mobile, formatPhone, signCustomerToken, requireCustomer } from './util.js';
 import { createOrder, orderInclude, serializeOrder } from './orders.js';
+import { notifyOrderLater } from './whatsapp.js';
 
 export const customerApi = express.Router();
 
@@ -42,6 +43,7 @@ customerApi.post(
     limit(req.ip, 'pedido', 20);
     const o = await createOrder(req.customer, req.body || {});
     res.status(201).json(serializeOrder(o));
+    notifyOrderLater(o.id, 'pedido');
   })
 );
 
@@ -83,5 +85,6 @@ customerApi.post(
     });
     if (!r.count) throw new HttpError(409, 'O pedido já foi confirmado pela loja. Fale com a loja para cancelar.');
     res.json(serializeOrder(await own(req)));
+    notifyOrderLater(o.id, 'cancelamento');
   })
 );

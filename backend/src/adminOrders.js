@@ -2,6 +2,8 @@ import express from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma, wrap, HttpError, text, bool, phoneKey, formatPhone, STATUSES } from './util.js';
 import { orderInclude, serializeOrder } from './orders.js';
+import { bridgeConfigured, notifyOrder, sendAndLog, waNumber } from './whatsapp.js';
+import { getSettings } from './util.js';
 
 export const adminOrders = express.Router();
 const TZ = process.env.TZ || 'America/Sao_Paulo';
@@ -114,5 +116,40 @@ adminOrders.get(
         })
         .sort((a, b) => b.spentCents - a.spentCents || b.orders - a.orders)
     );
+  })
+);
+
+// ---------- WhatsApp (avisos de pedido) ----------
+adminOrders.get(
+  '/whatsapp',
+  wrap(async (req, res) => {
+    const s = await getSettings();
+    const where = req.query.orderId ? { orderId: String(req.query.orderId) } : {};
+    const logs = await prisma.whatsappLog.findMany({ where, orderBy: { createdAt: 'desc' }, take: 100 });
+    res.json({ configured: bridgeConfigured(), enabled: s.notifyEnabled === '1', to: waNumber(s.notifyWhatsapp), logs });
+  })
+);
+
+adminOrders.post(
+  '/whatsapp/test',
+  wrap(async (_req, res) => {
+    const s = await getSettings();
+    const when = new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, dateStyle: 'short', timeStyle: 'short' }).format(new Date());
+    const log = await sendAndLog({
+      to: waNumber(s.notifyWhatsapp),
+      text: `✅ *Rei do Pod Caf*\nTeste dos avisos de pedido (${when}). Se chegou, os pedidos novos vão aparecer aqui.`,
+      kind: 'teste',
+    });
+    res.json(log);
+  })
+);
+
+// Reenvio manual (envia mesmo com os avisos desligados).
+adminOrders.post(
+  '/orders/:id/notify',
+  wrap(async (req, res) => {
+    const log = await notifyOrder(req.params.id, 'reenvio', { force: true });
+    if (!log) throw new HttpError(404, 'Pedido não encontrado');
+    res.json(log);
   })
 );

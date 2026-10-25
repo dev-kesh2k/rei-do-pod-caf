@@ -62,7 +62,7 @@ export function pricePair(price, promo, what) {
 
 export const KINDS = ['pod', 'outro'];
 
-export const bool = (v) => v === true || v === 'true' || v === 1;
+export const bool = (v) => v === true || v === 'true' || v === 1 || v === '1';
 
 export function slugify(s) {
   return String(s)
@@ -91,6 +91,8 @@ export const DEFAULT_SETTINGS = {
   bannerTitle: 'O melhor pod do Paraná',
   bannerText: 'Produtos 100% originais com a entrega mais rápida de Cafelândia e região.',
   pixKey: '',
+  notifyWhatsapp: '', // número que recebe os avisos de pedido (como aparece no WhatsApp)
+  notifyEnabled: '1',
 };
 
 export async function getSettings() {
