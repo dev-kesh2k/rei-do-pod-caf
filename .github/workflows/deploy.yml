@@ -1,0 +1,46 @@
+name: Deploy
+
+# main -> produção (/rei-do-pod-caf/) · dev -> ambiente de testes (/rei-do-pod-caf-dev/)
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+env:
+  SLUG: ${{ github.ref_name == 'main' && 'rei-do-pod-caf' || 'rei-do-pod-caf-dev' }}
+  APP_NAME: ${{ github.ref_name == 'main' && 'Rei Do Pod Caf' || 'Rei Do Pod Caf Dev' }}
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, hub]
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Cópia de entrega: o Hub publica daqui e a pasta de trabalho do Criador não é tocada.
+      - name: Sincronizar código com o Hub
+        run: |
+          mkdir -p "/opt/hub/data/app-builder/deploy/$SLUG"
+          rsync -a --delete --exclude '.git' --exclude 'node_modules' --exclude 'dist' \
+            ./ "/opt/hub/data/app-builder/deploy/$SLUG/"
+
+      - name: Publicar no Hub
+        env:
+          HUB_DEPLOY_TOKEN: ${{ secrets.HUB_DEPLOY_TOKEN }}
+        run: |
+          # 409 = outro deploy ainda em andamento: espera e tenta de novo.
+          for i in $(seq 1 30); do
+            code=$(curl -sS -o /tmp/hub-deploy-$SLUG.json -w '%{http_code}' -X POST \
+              -H "x-deploy-token: $HUB_DEPLOY_TOKEN" -H 'Content-Type: application/json' \
+              -d "{\"name\":\"$APP_NAME\"}" \
+              "http://127.0.0.1:3001/api/aplicacoes/deploy-hook/$SLUG")
+            cat /tmp/hub-deploy-$SLUG.json; echo
+            [ "$code" = 200 ] && exit 0
+            [ "$code" = 409 ] || exit 1
+            sleep 20
+          done
+          exit 1
