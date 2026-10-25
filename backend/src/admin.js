@@ -306,7 +306,7 @@ admin.put(
     const updates = {};
     if ('whatsapp' in body) {
       const digits = String(body.whatsapp || '').replace(/\D/g, '');
-      if (digits.length < 10 || digits.length > 15) throw new HttpError(400, 'WhatsApp inválido: use DDI + DDD + número (ex.: 5545998078084)');
+      if (digits.length < 10 || digits.length > 15) throw new HttpError(400, 'WhatsApp inválido: use DDI + DDD + número (ex.: 5545999999999)');
       updates.whatsapp = digits;
     }
     const limits = { msgHelp: 500, bannerTitle: 60, bannerText: 200, pixKey: 120 };
@@ -318,7 +318,7 @@ admin.put(
     };
     if ('notifyWhatsapp' in body) {
       const d = String(body.notifyWhatsapp || '').replace(/\D/g, '');
-      if (d && (d.length < 10 || d.length > 13)) throw new HttpError(400, 'WhatsApp para avisos inválido: use DDD + número (ex.: 554598078084)');
+      if (d && (d.length < 10 || d.length > 13)) throw new HttpError(400, 'WhatsApp para avisos inválido: use DDD + número (ex.: 554599999999)');
       updates.notifyWhatsapp = d;
     }
     if ('notifyEnabled' in body) updates.notifyEnabled = bool(body.notifyEnabled) ? '1' : '0';

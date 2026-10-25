@@ -110,7 +110,7 @@ export default function Settings() {
 
       <form onSubmit={salvar}>
         <Bloco titulo="Suporte e pagamento" texto="O WhatsApp é o canal de suporte (os pedidos são feitos no app).">
-          <Campo label="Número do WhatsApp" dica="Com DDI e DDD, só números. Ex.: 5545998078084">
+          <Campo label="Número do WhatsApp" dica="Com DDI e DDD, só números. Ex.: 5545999999999">
             <input
               className="adm-input px-3.5"
               type="tel"

@@ -163,7 +163,7 @@ export default function WhatsappAvisos() {
           className="adm-input px-3.5"
           type="tel"
           inputMode="numeric"
-          placeholder="Ex.: 554598078084"
+          placeholder="Ex.: 554599999999"
           value={numeroAviso}
           onChange={(e) => setNumeroAviso(e.target.value.replace(/[^\d()+ -]/g, ''))}
         />
