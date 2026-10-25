@@ -1,10 +1,10 @@
 import { useMemo, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { url } from '../../lib/api';
-import { temEstoque, temPromocao, useCatalog, type PublicProduct } from '../../lib/catalog';
+import { ehNovo, temEstoque, temPromocao, useCatalog, type PublicProduct } from '../../lib/catalog';
 import { CardProduto, GradeEsqueleto, Secao, StoreLayout } from '../../components/Store';
 import { useTitulo } from '../../components/Site';
-import { IconEscudo, IconRaio, IconSeta, IconWhatsApp } from '../../components/icons';
+import { IconCarrinho, IconEscudo, IconRaio, IconSeta } from '../../components/icons';
 import destaque from '../../destaque.webp';
 
 /** Linha de produtos: rola para o lado no celular, grade no desktop. */
@@ -45,8 +45,15 @@ export default function Inicio() {
   const comEstoque = useMemo(() => produtos.filter(temEstoque), [produtos]);
   const promocoes = comEstoque.filter(temPromocao).slice(0, 10);
   const destaques = comEstoque.filter((p) => p.featured).slice(0, 10);
-  const novidades = [...comEstoque].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)).slice(0, 10);
   const vitrine = destaques.length ? destaques : comEstoque.slice(0, 10);
+  // Novidades: só cadastrados há pouco (selo "Novo"), fora da Vitrine e quando são minoria —
+  // se todos têm a mesma data (ex.: catálogo importado de uma vez), a seção não aparece.
+  const naVitrine = new Set(vitrine.map((p) => p.uid));
+  const recentes = comEstoque.filter(ehNovo);
+  const novidades =
+    recentes.length <= comEstoque.length / 2
+      ? recentes.filter((p) => !naVitrine.has(p.uid)).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)).slice(0, 10)
+      : [];
   const s = catalog?.settings;
 
   return (
@@ -90,7 +97,7 @@ export default function Inicio() {
           {[
             [IconEscudo, '100% original', 'Produtos de procedência'],
             [IconRaio, 'Entrega rapidex', 'Em mãos, Cafelândia e região'],
-            [IconWhatsApp, 'Pedido no WhatsApp', 'Rápido e sem cadastro'],
+            [IconCarrinho, 'Peça pelo app', 'Pague na entrega'],
             [IconEscudo, '+500 clientes', 'Top 1 de Cafelândia'],
           ].map(([Icon, t, d]) => {
             const I = Icon as typeof IconEscudo;

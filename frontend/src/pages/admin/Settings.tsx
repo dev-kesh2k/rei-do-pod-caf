@@ -101,16 +101,13 @@ export default function Settings() {
   if (!s) return <div className="adm-card h-96 animate-pulse" />;
 
   const set = (k: keyof S, v: string) => setS((x) => (x ? { ...x, [k]: v } : x));
-  const exemplo = [s.msgCart, '', '1) 2x Ignite V55 — MENTHOL — R$ 0,00 (exemplo)', '', '*Total: R$ 0,00*', s.msgCartEnd ? `\n${s.msgCartEnd}` : '']
-    .join('\n')
-    .trim();
 
   return (
     <div className="max-w-2xl space-y-5">
       <h1 className="font-display text-3xl font-extrabold uppercase sm:text-4xl">Ajustes</h1>
 
       <form onSubmit={salvar}>
-        <Bloco titulo="WhatsApp e pedido" texto="Para onde vão os pedidos finalizados no carrinho.">
+        <Bloco titulo="Suporte e pagamento" texto="O WhatsApp é o canal de suporte (os pedidos são feitos no app).">
           <Campo label="Número do WhatsApp" dica="Com DDI e DDD, só números. Ex.: 5545998078084">
             <input
               className="adm-input px-3.5"
@@ -121,21 +118,14 @@ export default function Settings() {
               onChange={(e) => set('whatsapp', e.target.value.replace(/\D/g, ''))}
             />
           </Campo>
-          <Campo label="Início da mensagem do pedido" dica="Vem antes da lista de itens do carrinho.">
-            <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={300} value={s.msgCart} onChange={(e) => set('msgCart', e.target.value)} />
+          <Campo label="Chave Pix (opcional)" dica="Aparece para o cliente que escolher Pix na entrega.">
+            <input className="adm-input px-3.5" maxLength={120} value={s.pixKey} onChange={(e) => set('pixKey', e.target.value)} />
           </Campo>
-          <Campo label="Final da mensagem do pedido" dica="Vem depois do total (pode ficar vazio).">
-            <input className="adm-input px-3.5" maxLength={300} value={s.msgCartEnd} onChange={(e) => set('msgCartEnd', e.target.value)} />
-          </Campo>
-          <div className="rounded-xl border border-borda bg-fundo/60 p-3">
-            <p className="mb-1 text-xs font-semibold text-texto-2">Prévia</p>
-            <p className="whitespace-pre-line break-words text-xs text-texto-3">{exemplo}</p>
-          </div>
-          <Campo label="Mensagem do botão verde flutuante">
+          <Campo label="Mensagem inicial do suporte (WhatsApp)">
             <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={500} value={s.msgHelp} onChange={(e) => set('msgHelp', e.target.value)} />
           </Campo>
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-            <a href={waLink(s.whatsapp, exemplo)} target="_blank" rel="noopener noreferrer" className="adm-btn adm-btn-ghost px-4">
+            <a href={waLink(s.whatsapp, s.msgHelp)} target="_blank" rel="noopener noreferrer" className="adm-btn adm-btn-ghost px-4">
               Testar no WhatsApp
             </a>
             <button type="submit" disabled={salvando} className="botao-ouro adm-btn px-6 font-bold">

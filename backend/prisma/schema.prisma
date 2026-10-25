@@ -80,3 +80,66 @@ model Asset {
   version   Int      @default(1)
   updatedAt DateTime @updatedAt
 }
+
+// Cliente da loja: entra só com o celular (phoneKey = DDD + número, sem o 55).
+model Customer {
+  id          String   @id @default(cuid())
+  phoneKey    String   @unique
+  name        String
+  lastAddress Json? // último endereço/localização usado, para o próximo pedido
+  createdAt   DateTime @default(now())
+  lastLoginAt DateTime @default(now())
+  orders      Order[]
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  number         Int         @unique @default(autoincrement())
+  customerId     String
+  customer       Customer    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  customerName   String
+  phoneKey       String
+  street         String
+  houseNumber    String
+  district       String
+  complement     String      @default("")
+  reference      String      @default("")
+  latitude       Float?
+  longitude      Float?
+  totalCents     Int // soma dos itens com preço
+  consultItems   Int         @default(0) // itens sem preço ("Consultar")
+  paymentMethod  String // pix | dinheiro | cartao
+  changeForCents Int? // troco para (dinheiro)
+  notes          String      @default("")
+  status         String      @default("recebido") // recebido | confirmado | em_rota | entregue | cancelado
+  paid           Boolean     @default(false)
+  cancelReason   String      @default("")
+  canceledBy     String      @default("") // cliente | loja
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  confirmedAt    DateTime?
+  dispatchedAt   DateTime?
+  deliveredAt    DateTime?
+  canceledAt     DateTime?
+  items          OrderItem[]
+
+  @@index([status, createdAt])
+  @@index([phoneKey])
+  @@index([createdAt])
+}
+
+// Itens com nome e preço do momento do pedido (não mudam se o produto mudar depois).
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String?
+  flavorId       String?
+  name           String
+  flavorName     String  @default("")
+  unitPriceCents Int? // null = "Consultar"
+  quantity       Int
+  totalCents     Int?
+
+  @@index([orderId])
+}

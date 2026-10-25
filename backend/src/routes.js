@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import { prisma, wrap, getSettings, signToken, publicUser, requireAuth, loginLimiter, HttpError, text } from './util.js';
 import { admin } from './admin.js';
+import { customerApi } from './customer.js';
 
 export const api = express.Router();
 
@@ -120,6 +121,8 @@ api.post(
     res.json({ ok: true });
   })
 );
+
+api.use(customerApi);
 
 api.use('/admin', requireAuth, (_req, res, next) => {
   noStore(res);

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { api, getToken, setToken } from '../../lib/api';
 import { logoUrl, useCatalog } from '../../lib/catalog';
-import { IconAjustes, IconCaixa, IconOlho, IconSair, IconTag } from '../../components/icons';
+import { IconAjustes, IconCaixa, IconOlho, IconRecibo, IconSair, IconTag, IconUsuario } from '../../components/icons';
 
 const IconPreco = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
@@ -10,18 +10,46 @@ const IconPreco = ({ className }: { className?: string }) => (
   </svg>
 );
 
+// celular: barra inferior só com os itens marcados (Categorias fica dentro de Produtos).
 const ITENS = [
-  { to: '/admin', end: true, label: 'Produtos', Icon: IconCaixa },
-  { to: '/admin/precos', label: 'Preços', Icon: IconPreco },
-  { to: '/admin/categorias', label: 'Categorias', Icon: IconTag },
-  { to: '/admin/ajustes', label: 'Ajustes', Icon: IconAjustes },
+  { to: '/admin', end: true, label: 'Pedidos', Icon: IconRecibo, barra: true, pedidos: true },
+  { to: '/admin/produtos', label: 'Produtos', Icon: IconCaixa, barra: true },
+  { to: '/admin/precos', label: 'Preços', Icon: IconPreco, barra: true },
+  { to: '/admin/categorias', label: 'Categorias', Icon: IconTag, barra: false },
+  { to: '/admin/clientes', label: 'Clientes', Icon: IconUsuario, barra: true },
+  { to: '/admin/ajustes', label: 'Ajustes', Icon: IconAjustes, barra: true },
 ];
+
+function Badge({ n }: { n: number }) {
+  if (!n) return null;
+  return (
+    <span className="absolute -right-2 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-none text-white">
+      {n > 99 ? '99+' : n}
+    </span>
+  );
+}
 
 export default function AdminLayout() {
   const nav = useNavigate();
   const [logado, setLogado] = useState(!!getToken());
   const [nome, setNome] = useState('');
   const { catalog } = useCatalog();
+  const { pathname } = useLocation();
+  const [novos, setNovos] = useState(0);
+  const emPedidos = pathname === '/admin' || pathname.startsWith('/admin/pedidos');
+
+  // Contador de pedidos novos no menu (atualiza a cada 30 s e quando um pedido muda).
+  useEffect(() => {
+    if (!logado) return;
+    const ler = () => api<{ novos: number }>('admin/summary').then((r) => setNovos(r.novos)).catch(() => {});
+    ler();
+    const t = setInterval(ler, 30000);
+    window.addEventListener('rdp:pedidos', ler);
+    return () => {
+      clearInterval(t);
+      window.removeEventListener('rdp:pedidos', ler);
+    };
+  }, [logado]);
 
   useEffect(() => {
     const sair = () => setLogado(false);
@@ -54,9 +82,12 @@ export default function AdminLayout() {
           </span>
         </Link>
         <nav className="flex flex-col gap-1">
-          {ITENS.map(({ to, end, label, Icon }) => (
-            <NavLink key={to} to={to} end={end} className={linkCls}>
-              <Icon className="h-5 w-5" />
+          {ITENS.map(({ to, end, label, Icon, pedidos }) => (
+            <NavLink key={to} to={to} end={end} className={(a) => linkCls({ isActive: pedidos ? emPedidos : a.isActive })}>
+              <span className="relative">
+                <Icon className="h-5 w-5" />
+                {pedidos && <Badge n={novos} />}
+              </span>
               {label}
             </NavLink>
           ))}
@@ -101,19 +132,22 @@ export default function AdminLayout() {
 
         {/* Barra inferior (celular/tablet) */}
         <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-borda bg-fundo/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
-          <div className="mx-auto grid max-w-lg grid-cols-4">
-            {ITENS.map(({ to, end, label, Icon }) => (
+          <div className="mx-auto grid max-w-lg grid-cols-5">
+            {ITENS.filter((i) => i.barra).map(({ to, end, label, Icon, pedidos }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  `flex min-h-[3.5rem] flex-col items-center justify-center gap-0.5 text-[11px] font-semibold ${
-                    isActive ? 'text-ouro' : 'text-texto-3'
+                  `flex min-h-[3.5rem] min-w-0 flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold min-[360px]:text-[11px] ${
+                    (pedidos ? emPedidos : isActive) ? 'text-ouro' : 'text-texto-3'
                   }`
                 }
               >
-                <Icon className="h-5 w-5" />
+                <span className="relative">
+                  <Icon className="h-5 w-5" />
+                  {pedidos && <Badge n={novos} />}
+                </span>
                 {label}
               </NavLink>
             ))}

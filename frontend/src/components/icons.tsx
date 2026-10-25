@@ -81,3 +81,21 @@ export const IconEscudo = ({ className }: P) => (
 export const IconRaio = ({ className }: P) => (
   <svg viewBox="0 0 24 24" {...base} className={className}><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
 );
+export const IconAlvo = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" {...base} className={className}><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2.5" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>
+);
+export const IconPino = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" {...base} className={className}><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+);
+export const IconRecibo = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" {...base} className={className}><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z" /><path d="M9 8h6M9 12h6" /></svg>
+);
+export const IconUsuario = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" {...base} className={className}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>
+);
+export const IconTelefone = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" {...base} className={className}><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2" /></svg>
+);
+export const IconX = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" {...base} className={className}><path d="M18 6 6 18M6 6l12 12" /></svg>
+);

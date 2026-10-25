@@ -1,11 +1,11 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { url } from '../lib/api';
-import { brl, ehNovo, formatarPuffs, logoUrl, resumoPreco, temPromocao, useCatalog, type PublicProduct } from '../lib/catalog';
+import { DEFAULT_SETTINGS, brl, ehNovo, formatarPuffs, logoUrl, resumoPreco, temPromocao, useCatalog, waLink, type PublicProduct } from '../lib/catalog';
+import { useCliente } from '../lib/customer';
 import { useCart } from '../lib/cart';
 import { useToast } from './Toast';
-import { WhatsAppFlutuante } from './Site';
-import { IconBusca, IconCarrinho, IconCasa, IconFoto, IconGrade } from './icons';
+import { IconBusca, IconCarrinho, IconCasa, IconFoto, IconGrade, IconRecibo, IconWhatsApp } from './icons';
 
 export function Logo({ compacto = false }: { compacto?: boolean }) {
   const { catalog } = useCatalog();
@@ -51,9 +51,22 @@ function BuscaTopo() {
 const linkTopo = ({ isActive }: { isActive: boolean }) =>
   `rounded-full px-3 py-2 text-sm font-semibold transition-colors ${isActive ? 'text-ouro' : 'text-texto-2 hover:text-texto'}`;
 
-/** Moldura da loja: cabeçalho (desktop), topo + barra inferior (celular), rodapé e WhatsApp. */
-export function StoreLayout({ children, semWhats = false }: { children: ReactNode; semWhats?: boolean }) {
+/** Botão de suporte: abre a conversa com a loja no WhatsApp (o pedido é feito no app). */
+export function SuporteWhats({ className = '', children }: { className?: string; children?: ReactNode }) {
+  const { catalog } = useCatalog();
+  const s = catalog?.settings ?? DEFAULT_SETTINGS;
+  return (
+    <a href={waLink(s.whatsapp, s.msgHelp)} target="_blank" rel="noopener noreferrer" className={className}>
+      <IconWhatsApp className="h-5 w-5 shrink-0" />
+      {children ?? 'Falar com a loja'}
+    </a>
+  );
+}
+
+/** Moldura da loja: cabeçalho (desktop), topo + barra inferior (celular) e rodapé com suporte. */
+export function StoreLayout({ children }: { children: ReactNode }) {
   const { quantidade } = useCart();
+  const { cliente } = useCliente();
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -64,6 +77,7 @@ export function StoreLayout({ children, semWhats = false }: { children: ReactNod
     { to: '/categorias', label: 'Categorias', Icon: IconGrade },
     { to: '/produtos?busca=1', label: 'Busca', Icon: IconBusca, ativo: pathname === '/produtos' },
     { to: '/carrinho', label: 'Carrinho', Icon: IconCarrinho, n: quantidade },
+    { to: '/pedidos', label: 'Pedidos', Icon: IconRecibo },
   ];
 
   return (
@@ -87,6 +101,15 @@ export function StoreLayout({ children, semWhats = false }: { children: ReactNod
               Categorias
             </NavLink>
           </nav>
+          <NavLink
+            to="/pedidos"
+            className={({ isActive }) =>
+              `hidden h-11 max-w-[11rem] items-center gap-2 rounded-full px-3 text-sm font-semibold md:inline-flex ${isActive ? 'text-ouro' : 'text-texto-2 hover:text-texto'}`
+            }
+          >
+            <IconRecibo className="h-5 w-5 shrink-0" />
+            <span className="truncate">{cliente ? cliente.name.split(' ')[0] : 'Meus pedidos'}</span>
+          </NavLink>
           <Link
             to="/carrinho"
             className="relative hidden h-11 items-center gap-2 rounded-full border border-borda bg-superficie px-4 text-sm font-semibold transition-colors hover:border-ouro/40 md:inline-flex"
@@ -107,19 +130,22 @@ export function StoreLayout({ children, semWhats = false }: { children: ReactNod
         <p className="mb-1 font-display text-lg font-extrabold uppercase tracking-wide text-texto">
           Rei do Pod <span className="texto-ouro">Caf</span>
         </p>
-        <p>Pods 100% originais · Cafelândia e região · Pedido pelo WhatsApp</p>
+        <p>Pods 100% originais · Cafelândia e região · Entrega com pagamento na hora</p>
+        <SuporteWhats className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-full border border-[#25d366]/40 px-4 text-sm font-semibold text-[#5be08f] hover:bg-[#25d366]/10">
+          Dúvidas? Fale com a loja
+        </SuporteWhats>
         <p className="mt-2">&copy; {new Date().getFullYear()} REI DO POD CAF — Proibida a venda para menores de 18 anos.</p>
       </footer>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-borda bg-fundo/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden" aria-label="Navegação">
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-5">
           {abas.map(({ to, label, Icon, end, n, ativo }) => (
             <NavLink
               key={label}
               to={to}
               end={end}
               className={({ isActive }) =>
-                `flex min-h-[3.75rem] flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors ${
+                `flex min-h-[3.75rem] min-w-0 flex-col items-center justify-center gap-1 text-[10.5px] min-[360px]:text-[11px] font-semibold transition-colors ${
                   (ativo ?? isActive) ? 'text-ouro' : 'text-texto-3'
                 }`
               }
@@ -134,7 +160,6 @@ export function StoreLayout({ children, semWhats = false }: { children: ReactNod
         </div>
       </nav>
 
-      {!semWhats && <WhatsAppFlutuante />}
     </div>
   );
 }

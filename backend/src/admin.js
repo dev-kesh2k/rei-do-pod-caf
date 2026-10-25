@@ -1,7 +1,9 @@
 import express from 'express';
 import { prisma, wrap, HttpError, text, intOrNull, bool, slugify, parseImage, getSettings, DEFAULT_SETTINGS, cents, pricePair, KINDS } from './util.js';
+import { adminOrders } from './adminOrders.js';
 
 export const admin = express.Router();
+admin.use(adminOrders);
 
 const productInclude = {
   brand: { select: { id: true, name: true } },
@@ -307,16 +309,15 @@ admin.put(
       if (digits.length < 10 || digits.length > 15) throw new HttpError(400, 'WhatsApp inválido: use DDI + DDD + número (ex.: 5545998078084)');
       updates.whatsapp = digits;
     }
-    const limits = { msgCart: 300, msgCartEnd: 300, msgHelp: 500, bannerTitle: 60, bannerText: 200 };
+    const limits = { msgHelp: 500, bannerTitle: 60, bannerText: 200, pixKey: 120 };
     const labels = {
-      msgCart: 'Início da mensagem do pedido',
-      msgCartEnd: 'Final da mensagem do pedido',
-      msgHelp: 'Mensagem do botão flutuante',
+      msgHelp: 'Mensagem do suporte',
       bannerTitle: 'Título do banner',
       bannerText: 'Texto do banner',
+      pixKey: 'Chave Pix',
     };
     for (const [k, max] of Object.entries(limits)) {
-      if (k in body) updates[k] = text(body[k], labels[k], { max, required: k !== 'msgCartEnd' });
+      if (k in body) updates[k] = text(body[k], labels[k], { max, required: k !== 'pixKey' });
     }
     await prisma.$transaction(
       Object.entries(updates)

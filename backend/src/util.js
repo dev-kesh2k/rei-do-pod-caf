@@ -87,11 +87,10 @@ export function parseImage(dataUrl) {
 // ---------- Configurações ----------
 export const DEFAULT_SETTINGS = {
   whatsapp: '5545998078084',
-  msgCart: 'Olá! Vim pelo site e quero fazer este pedido:',
-  msgCartEnd: 'Está disponível?',
   msgHelp: 'Olá! Vim pelo site e queria tirar uma dúvida.',
   bannerTitle: 'O melhor pod do Paraná',
   bannerText: 'Produtos 100% originais com a entrega mais rápida de Cafelândia e região.',
+  pixKey: '',
 };
 
 export async function getSettings() {
@@ -107,6 +106,24 @@ if (!SECRET) console.warn('JWT_SECRET não definido: usando segredo temporário 
 const KEY = SECRET || crypto.randomBytes(32).toString('hex');
 
 export const signToken = (user) => jwt.sign({ sub: user.id }, KEY, { expiresIn: '30d' });
+// Cliente: token próprio (typ "c"), lembrado no aparelho.
+export const signCustomerToken = (c) => jwt.sign({ sub: c.id, typ: 'c' }, KEY, { expiresIn: '365d' });
+
+export async function requireCustomer(req, res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) return res.status(401).json({ error: 'Entre com seu celular' });
+  try {
+    const { sub, typ } = jwt.verify(token, KEY);
+    if (typ !== 'c') return res.status(401).json({ error: 'Entre com seu celular' });
+    const customer = await prisma.customer.findUnique({ where: { id: String(sub) } });
+    if (!customer) return res.status(401).json({ error: 'Entre com seu celular' });
+    req.customer = customer;
+    next();
+  } catch {
+    res.status(401).json({ error: 'Sessão expirada. Entre de novo com seu celular.' });
+  }
+}
 
 export const publicUser = ({ passwordHash, ...rest }) => rest;
 
@@ -115,7 +132,8 @@ export async function requireAuth(req, res, next) {
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
   if (!token) return res.status(401).json({ error: 'Não autenticado' });
   try {
-    const { sub } = jwt.verify(token, KEY);
+    const { sub, typ } = jwt.verify(token, KEY);
+    if (typ) return res.status(401).json({ error: 'Não autenticado' });
     const user = await prisma.user.findUnique({ where: { id: String(sub) } });
     if (!user) return res.status(401).json({ error: 'Sessão inválida' });
     req.user = user;
@@ -142,3 +160,39 @@ export function loginLimiter(req, res, next) {
   req.loginOk = () => attempts.delete(ip);
   next();
 }
+
+// Limite genérico por IP: no máximo `max` ações de um tipo a cada 15 min (memória).
+const hits = new Map();
+export function limit(ip, kind, max) {
+  const k = `${kind}:${ip}`;
+  const now = Date.now();
+  const list = (hits.get(k) || []).filter((t) => now - t < 15 * 60_000);
+  if (list.length >= max) throw new HttpError(429, 'Muitas tentativas. Aguarde alguns minutos.');
+  list.push(now);
+  hits.set(k, list);
+}
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, l] of hits) if (!l.some((t) => now - t < 15 * 60_000)) hits.delete(k);
+}, 10 * 60_000).unref();
+
+// ---------- Celular ----------
+/** Celular normalizado (DDD + número, sem o 55). */
+export function phoneKey(v) {
+  let d = String(v || '').replace(/\D/g, '');
+  if ((d.length === 12 || d.length === 13) && d.startsWith('55')) d = d.slice(2);
+  return d;
+}
+
+export function mobile(v) {
+  const key = phoneKey(text(v, 'Celular', { max: 30 }));
+  if (key.length < 10 || key.length > 11) throw new HttpError(400, 'Informe o celular com DDD (ex.: 45 99807-8084)');
+  return key;
+}
+
+export const formatPhone = (key) =>
+  key.length === 11 ? `(${key.slice(0, 2)}) ${key.slice(2, 7)}-${key.slice(7)}` : key.length === 10 ? `(${key.slice(0, 2)}) ${key.slice(2, 6)}-${key.slice(6)}` : key;
+
+// ---------- Pedidos ----------
+export const PAYMENT_METHODS = ['pix', 'dinheiro', 'cartao'];
+export const STATUSES = ['recebido', 'confirmado', 'em_rota', 'entregue', 'cancelado'];

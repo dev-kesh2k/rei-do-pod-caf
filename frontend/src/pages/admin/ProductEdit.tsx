@@ -315,7 +315,7 @@ export default function ProductEdit() {
       await api(`admin/products/${produto.id}`, { method: 'DELETE' });
       toast('Produto excluído');
       reload();
-      nav('/admin', { replace: true });
+      nav('/admin/produtos', { replace: true });
     } catch (e) {
       toast(errorText(e), true);
     }
@@ -407,7 +407,7 @@ export default function ProductEdit() {
     return (
       <div className="adm-card p-6 text-sm text-red-300">
         {erro}{' '}
-        <Link to="/admin" className="underline">
+        <Link to="/admin/produtos" className="underline">
           Voltar
         </Link>
       </div>
@@ -419,7 +419,7 @@ export default function ProductEdit() {
 
   return (
     <div>
-      <Link to="/admin" className="mb-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-texto-2 hover:text-ouro">
+      <Link to="/admin/produtos" className="mb-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-texto-2 hover:text-ouro">
         <IconVoltar className="h-4 w-4" />
         Produtos
       </Link>

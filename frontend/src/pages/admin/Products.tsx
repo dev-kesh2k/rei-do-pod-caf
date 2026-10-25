@@ -77,10 +77,15 @@ export default function Products() {
             {list ? `${list.length} produtos · ${list.filter((p) => p.active).length} no catálogo` : 'Carregando…'}
           </p>
         </div>
-        <Link to="/admin/produtos/novo" className="botao-ouro adm-btn px-4 text-sm font-bold">
-          <IconMais className="h-5 w-5" />
-          Novo produto
-        </Link>
+        <div className="flex gap-2">
+          <Link to="/admin/categorias" className="adm-btn adm-btn-ghost px-4 text-sm lg:hidden">
+            Categorias
+          </Link>
+          <Link to="/admin/produtos/novo" className="botao-ouro adm-btn px-4 text-sm font-bold">
+            <IconMais className="h-5 w-5" />
+            Novo produto
+          </Link>
+        </div>
       </div>
 
       <div className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto]">

@@ -1,27 +1,20 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { brl, DEFAULT_SETTINGS, useCatalog, waLink } from '../../lib/catalog';
-import { mensagemCarrinho, useCart } from '../../lib/cart';
-import { FotoProduto, StoreLayout } from '../../components/Store';
+import { brl } from '../../lib/catalog';
+import { useCart } from '../../lib/cart';
+import { FotoProduto, StoreLayout, SuporteWhats } from '../../components/Store';
 import { useTitulo } from '../../components/Site';
-import { IconCarrinho, IconLixo, IconWhatsApp } from '../../components/icons';
+import { IconCarrinho, IconLixo, IconSeta } from '../../components/icons';
 import { Quantidade } from './Produto';
 
 export default function Carrinho() {
   useTitulo('Carrinho — REI DO POD CAF');
-  const { catalog } = useCatalog();
   const { linhas, total, aConsultar, alterar, remover, limpar } = useCart();
-  const [nome, setNome] = useState(() => localStorage.getItem('rdp:nome') ?? '');
-  const [obs, setObs] = useState('');
-  const [enviado, setEnviado] = useState(false);
-  const s = catalog?.settings ?? DEFAULT_SETTINGS;
   const validas = linhas.filter((l) => l.disponivel);
   const indisponiveis = linhas.filter((l) => !l.disponivel);
   const qtd = validas.reduce((t, l) => t + l.item.qty, 0);
-  const link = waLink(s.whatsapp, mensagemCarrinho(s, linhas, { nome, obs }));
 
   return (
-    <StoreLayout semWhats>
+    <StoreLayout>
       <div className="mx-auto max-w-6xl px-4 pb-12 pt-5 md:pt-8">
         <h1 className="mb-5 font-display text-[clamp(2.2rem,10vw,3.5rem)] font-extrabold uppercase leading-none">
           <span className="texto-ouro">Carrinho</span>
@@ -31,7 +24,7 @@ export default function Carrinho() {
           <div className="rounded-3xl border border-dashed border-white/10 px-4 py-16 text-center">
             <IconCarrinho className="mx-auto mb-3 h-10 w-10 text-texto-3" />
             <p className="mb-1 font-semibold">Seu carrinho está vazio</p>
-            <p className="mb-6 text-sm text-texto-2">Escolha os produtos e sabores e finalize pelo WhatsApp.</p>
+            <p className="mb-6 text-sm text-texto-2">Escolha os produtos e sabores e finalize o pedido aqui mesmo.</p>
             <Link to="/produtos" className="botao-ouro inline-flex min-h-12 items-center rounded-2xl px-6 font-bold uppercase tracking-wider">
               Ver produtos
             </Link>
@@ -117,35 +110,14 @@ export default function Carrinho() {
                 {aConsultar > 0 && total > 0 && <p className="text-right text-xs text-texto-3">+ itens a consultar</p>}
               </div>
 
-              <label className="block space-y-1.5">
-                <span className="adm-label">Seu nome (opcional)</span>
-                <input
-                  className="adm-input px-3.5"
-                  autoComplete="name"
-                  maxLength={60}
-                  value={nome}
-                  onChange={(e) => {
-                    setNome(e.target.value);
-                    localStorage.setItem('rdp:nome', e.target.value);
-                  }}
-                />
-              </label>
-              <label className="block space-y-1.5">
-                <span className="adm-label">Observação (opcional)</span>
-                <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={300} placeholder="Ex.: entregar após as 18h" value={obs} onChange={(e) => setObs(e.target.value)} />
-              </label>
-
               {validas.length > 0 ? (
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setEnviado(true)}
-                  className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#25d366] px-4 font-bold text-white shadow-[0_10px_25px_-5px_rgba(37,211,102,.45)] transition-transform active:scale-[.98]"
+                <Link
+                  to="/checkout"
+                  className="botao-ouro flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-4 font-bold uppercase tracking-wider"
                 >
-                  <IconWhatsApp className="h-6 w-6" />
-                  Finalizar pelo WhatsApp
-                </a>
+                  Finalizar pedido
+                  <IconSeta className="h-5 w-5" />
+                </Link>
               ) : (
                 <p className="text-center text-sm text-texto-3">Nenhum item disponível para pedir.</p>
               )}
@@ -154,21 +126,10 @@ export default function Carrinho() {
                   {indisponiveis.length} {indisponiveis.length === 1 ? 'item esgotado não entra' : 'itens esgotados não entram'} no pedido.
                 </p>
               )}
-              {enviado && (
-                <div className="rounded-xl border border-ouro/30 bg-ouro/5 p-3 text-sm">
-                  <p className="mb-2">Enviou o pedido no WhatsApp? Você pode esvaziar o carrinho.</p>
-                  <button
-                    type="button"
-                    className="adm-btn adm-btn-ghost w-full"
-                    onClick={() => {
-                      limpar();
-                      setEnviado(false);
-                    }}
-                  >
-                    Esvaziar carrinho
-                  </button>
-                </div>
-              )}
+              <p className="text-center text-xs text-texto-3">Entrega em Cafelândia e região · pagamento na entrega (Pix, dinheiro ou cartão).</p>
+              <SuporteWhats className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold text-[#5be08f] hover:bg-[#25d366]/10">
+                Dúvidas? Fale com a loja
+              </SuporteWhats>
             </aside>
           </div>
         )}

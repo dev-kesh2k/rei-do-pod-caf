@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { api, url } from './api';
 
-export type Settings = { whatsapp: string; msgCart: string; msgCartEnd: string; msgHelp: string; bannerTitle: string; bannerText: string };
+export type Settings = { whatsapp: string; msgHelp: string; bannerTitle: string; bannerText: string; pixKey: string };
 export type PublicFlavor = { id: string; name: string; available: boolean; price: number | null; promo: number | null };
 export type PublicProduct = {
   uid: string;
@@ -26,11 +26,10 @@ export type Catalog = { settings: Settings; logoVersion: number; categories: Cat
 
 export const DEFAULT_SETTINGS: Settings = {
   whatsapp: '5545998078084',
-  msgCart: 'Olá! Vim pelo site e quero fazer este pedido:',
-  msgCartEnd: 'Está disponível?',
   msgHelp: 'Olá! Vim pelo site e queria tirar uma dúvida.',
   bannerTitle: 'O melhor pod do Paraná',
   bannerText: 'Produtos 100% originais com a entrega mais rápida de Cafelândia e região.',
+  pixKey: '',
 };
 
 /** 8990 → "R$ 89,90" */
@@ -65,7 +64,7 @@ export function resumoPreco(p: PublicProduct): Resumo {
 
 export const temPromocao = (p: PublicProduct) => opcoes(p).some((o) => o.promo != null);
 export const temEstoque = (p: PublicProduct) => opcoes(p).length > 0;
-const DIAS_NOVO = 7;
+const DIAS_NOVO = 30;
 export const ehNovo = (p: PublicProduct) => Date.now() - Date.parse(p.createdAt) < DIAS_NOVO * 24 * 60 * 60 * 1000;
 
 /** Minúsculas, sem acento e sem espaços nas pontas ("Maçã " == "maca"). */

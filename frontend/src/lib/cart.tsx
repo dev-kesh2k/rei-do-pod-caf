@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { brl, efetivo, useCatalog, type PublicFlavor, type PublicProduct, type Settings } from './catalog';
+import { efetivo, useCatalog, type PublicFlavor, type PublicProduct } from './catalog';
 
 type Item = { pid: string; fid: string | null; qty: number };
 export type Linha = {
@@ -123,25 +123,4 @@ export function useCart() {
   const c = useContext(CartContext);
   if (!c) throw new Error('CartProvider ausente');
   return c;
-}
-
-/** Texto do pedido para o WhatsApp: itens, quantidades, valores e total. */
-export function mensagemCarrinho(s: Settings, linhas: Linha[], extra: { nome?: string; obs?: string }) {
-  const validas = linhas.filter((l) => l.disponivel && l.produto);
-  const itens = validas.map((l, i) => {
-    const nome = [l.produto!.name, l.sabor?.name].filter(Boolean).join(' — ');
-    const valor = l.total == null ? 'Consultar' : `${brl(l.total)}${l.item.qty > 1 ? ` (${brl(l.unit!)} cada)` : ''}`;
-    return `${i + 1}) ${l.item.qty}x ${nome} — ${valor}`;
-  });
-  const total = validas.reduce((t, l) => t + (l.total ?? 0), 0);
-  const consultar = validas.filter((l) => l.total == null).length;
-  const linhaTotal =
-    total > 0
-      ? `*Total: ${brl(total)}*${consultar ? ` + ${consultar} ${consultar === 1 ? 'item' : 'itens'} a consultar` : ''}`
-      : '*Total: a consultar*';
-  const dados = [extra.nome?.trim() ? `Nome: ${extra.nome.trim()}` : '', extra.obs?.trim() ? `Obs.: ${extra.obs.trim()}` : ''].filter(Boolean);
-  return [s.msgCart, itens.join('\n'), [linhaTotal, ...dados].join('\n'), s.msgCartEnd]
-    .map((b) => b.trim())
-    .filter(Boolean)
-    .join('\n\n');
 }
