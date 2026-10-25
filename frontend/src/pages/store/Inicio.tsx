@@ -1,7 +1,7 @@
 import { useMemo, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { url } from '../../lib/api';
-import { ehNovo, temEstoque, temPromocao, useCatalog, type PublicProduct } from '../../lib/catalog';
+import { temEstoque, temPromocao, useCatalog, type PublicProduct } from '../../lib/catalog';
 import { CardProduto, GradeEsqueleto, Secao, StoreLayout } from '../../components/Store';
 import { useTitulo } from '../../components/Site';
 import { IconCarrinho, IconEscudo, IconRaio, IconSeta } from '../../components/icons';
@@ -46,14 +46,18 @@ export default function Inicio() {
   const promocoes = comEstoque.filter(temPromocao).slice(0, 10);
   const destaques = comEstoque.filter((p) => p.featured).slice(0, 10);
   const vitrine = destaques.length ? destaques : comEstoque.slice(0, 10);
-  // Novidades: só cadastrados há pouco (selo "Novo"), fora da Vitrine e quando são minoria —
-  // se todos têm a mesma data (ex.: catálogo importado de uma vez), a seção não aparece.
+  // Novidades: o que entrou depois do catálogo inicial (mais de 3 dias após o cadastro mais antigo,
+  // nos últimos 60 dias) e fora da Vitrine. Se tudo foi cadastrado junto, a seção não aparece.
   const naVitrine = new Set(vitrine.map((p) => p.uid));
-  const recentes = comEstoque.filter(ehNovo);
-  const novidades =
-    recentes.length <= comEstoque.length / 2
-      ? recentes.filter((p) => !naVitrine.has(p.uid)).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)).slice(0, 10)
-      : [];
+  const DIA = 24 * 60 * 60 * 1000;
+  const inicio = Math.min(...produtos.map((p) => Date.parse(p.createdAt)));
+  const novidades = comEstoque
+    .filter((p) => {
+      const t = Date.parse(p.createdAt);
+      return t - inicio > 3 * DIA && Date.now() - t < 60 * DIA && !naVitrine.has(p.uid);
+    })
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+    .slice(0, 10);
   const s = catalog?.settings;
 
   return (

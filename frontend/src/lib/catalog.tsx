@@ -64,7 +64,7 @@ export function resumoPreco(p: PublicProduct): Resumo {
 
 export const temPromocao = (p: PublicProduct) => opcoes(p).some((o) => o.promo != null);
 export const temEstoque = (p: PublicProduct) => opcoes(p).length > 0;
-const DIAS_NOVO = 30;
+const DIAS_NOVO = 7;
 export const ehNovo = (p: PublicProduct) => Date.now() - Date.parse(p.createdAt) < DIAS_NOVO * 24 * 60 * 60 * 1000;
 
 /** Minúsculas, sem acento e sem espaços nas pontas ("Maçã " == "maca"). */
