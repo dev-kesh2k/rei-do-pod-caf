@@ -10,43 +10,58 @@ api.get('/health', (_req, res) => res.json({ ok: true }));
 const noStore = (res) => res.set('Cache-Control', 'no-store');
 
 // ---------- Catálogo público ----------
-// Só produtos ativos de marcas ativas e só os sabores disponíveis: o que for desligado no painel some na hora.
+// Só produtos ativos de categorias ativas. Sabor esgotado vem sem preço (não pode ser comprado).
+function offer(price, promo) {
+  if (price == null) return { price: null, promo: null };
+  return { price, promo: promo != null && promo < price ? promo : null };
+}
+
 api.get(
   '/catalog',
   wrap(async (_req, res) => {
-    const [settings, logo, products] = await Promise.all([
+    const [settings, logo, products, brands] = await Promise.all([
       getSettings(),
       prisma.asset.findUnique({ where: { key: 'logo' }, select: { version: true } }),
       prisma.product.findMany({
         where: { active: true, brand: { active: true } },
         orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-        include: {
-          brand: { select: { name: true, sortOrder: true } },
-          flavors: { where: { available: true }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }], select: { name: true } },
-        },
+        include: { flavors: { orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] } },
       }),
+      prisma.brand.findMany({ where: { active: true }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] }),
     ]);
-    // Botões de marca na ordem do painel, só das marcas que têm produto visível.
-    const brands = [...new Map(products.map((p) => [p.brand.name, p.brand.sortOrder])).entries()]
-      .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))
-      .map(([name]) => name);
+    const brandById = new Map(brands.map((b) => [b.id, b]));
+    const count = new Map();
+    for (const p of products) count.set(p.brandId, (count.get(p.brandId) || 0) + 1);
     noStore(res);
     res.json({
       settings,
       logoVersion: logo?.version ?? 0,
-      brands,
-      products: products.map((p) => ({
-        id: p.slug,
-        name: p.name,
-        brand: p.brand.name,
-        puffs: p.puffs,
-        series: p.series,
-        photo: p.photoVersion ? `api/products/${p.id}/photo?v=${p.photoVersion}` : '',
-        createdAt: p.createdAt,
-        noFlavor: p.noFlavor,
-        inStock: p.inStock,
-        flavors: p.flavors.map((f) => f.name),
-      })),
+      categories: brands.filter((b) => count.get(b.id)).map((b) => ({ name: b.name, kind: b.kind, count: count.get(b.id) })),
+      products: products.map((p) => {
+        const base = offer(p.priceCents, p.promoCents);
+        const flavors = p.flavors.map((f) => {
+          const o = f.priceCents != null ? offer(f.priceCents, f.promoCents) : base;
+          return f.available ? { id: f.id, name: f.name, available: true, ...o } : { id: f.id, name: f.name, available: false, price: null, promo: null };
+        });
+        const inStock = p.noFlavor ? p.inStock : flavors.some((f) => f.available);
+        return {
+          uid: p.id,
+          id: p.slug,
+          name: p.name,
+          brand: brandById.get(p.brandId)?.name ?? '',
+          kind: brandById.get(p.brandId)?.kind ?? 'pod',
+          puffs: p.puffs,
+          series: p.series,
+          description: p.description,
+          photo: p.photoVersion ? `api/products/${p.id}/photo?v=${p.photoVersion}` : '',
+          createdAt: p.createdAt,
+          featured: p.featured,
+          noFlavor: p.noFlavor,
+          inStock,
+          ...(p.noFlavor && !inStock ? { price: null, promo: null } : base),
+          flavors: p.noFlavor ? [] : flavors,
+        };
+      }),
     });
   })
 );

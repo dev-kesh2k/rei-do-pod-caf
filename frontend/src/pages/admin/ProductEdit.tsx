@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api, errorText, url } from '../../lib/api';
-import { useCatalog } from '../../lib/catalog';
+import { brl, useCatalog } from '../../lib/catalog';
+import { centsToInput, erroPreco, inputToCents, limparPreco } from '../../lib/money';
 import { resizeImage } from '../../lib/image';
 import Switch from '../../components/Switch';
 import { useToast } from '../../components/Toast';
@@ -16,12 +17,30 @@ type Form = {
   series: string;
   slug: string;
   sortOrder: string;
+  price: string;
+  promo: string;
+  description: string;
+  featured: boolean;
   active: boolean;
   noFlavor: boolean;
   inStock: boolean;
 };
 
-const vazio: Form = { name: '', brandId: '', puffs: '', series: '', slug: '', sortOrder: '', active: true, noFlavor: false, inStock: true };
+const vazio: Form = {
+  name: '',
+  brandId: '',
+  puffs: '',
+  series: '',
+  slug: '',
+  sortOrder: '',
+  price: '',
+  promo: '',
+  description: '',
+  featured: false,
+  active: true,
+  noFlavor: false,
+  inStock: true,
+};
 
 function toForm(p: Product): Form {
   return {
@@ -31,6 +50,10 @@ function toForm(p: Product): Form {
     series: p.series,
     slug: p.slug,
     sortOrder: String(p.sortOrder),
+    price: centsToInput(p.priceCents),
+    promo: centsToInput(p.promoCents),
+    description: p.description,
+    featured: p.featured,
     active: p.active,
     noFlavor: p.noFlavor,
     inStock: p.inStock,
@@ -59,12 +82,14 @@ function LinhaSwitch({ titulo, texto, checked, onChange }: { titulo: string; tex
   );
 }
 
+type SaborDados = { name: string; priceCents: number | null; promoCents: number | null };
+
 function SaborItem({
   f,
   primeiro,
   ultimo,
   onToggle,
-  onRename,
+  onSave,
   onDelete,
   onMove,
   ordenando,
@@ -74,49 +99,79 @@ function SaborItem({
   primeiro: boolean;
   ultimo: boolean;
   onToggle: (v: boolean) => void;
-  onRename: (nome: string) => Promise<boolean>;
+  onSave: (d: SaborDados) => Promise<boolean>;
   onDelete: () => void;
   onMove: (dir: -1 | 1) => void;
 }) {
   const [editando, setEditando] = useState(false);
   const [nome, setNome] = useState(f.name);
-  useEffect(() => setNome(f.name), [f.name]);
+  const [preco, setPreco] = useState(centsToInput(f.priceCents));
+  const [promo, setPromo] = useState(centsToInput(f.promoCents));
+  const [erro, setErro] = useState('');
 
-  async function salvar(e?: FormEvent) {
-    e?.preventDefault();
-    if (!nome.trim() || nome.trim() === f.name) {
-      setNome(f.name);
-      setEditando(false);
-      return;
-    }
-    if (await onRename(nome.trim())) setEditando(false);
+  function abrir() {
+    setNome(f.name);
+    setPreco(centsToInput(f.priceCents));
+    setPromo(centsToInput(f.promoCents));
+    setErro('');
+    setEditando(true);
   }
+
+  async function salvar(e: FormEvent) {
+    e.preventDefault();
+    const priceCents = inputToCents(preco);
+    const promoCents = inputToCents(promo);
+    const msg = !nome.trim() ? 'Informe o nome' : erroPreco(priceCents, promoCents);
+    if (msg) return setErro(msg);
+    if (await onSave({ name: nome.trim(), priceCents, promoCents })) setEditando(false);
+  }
+
+  if (editando)
+    return (
+      <li className="rounded-xl border border-ouro/40 bg-fundo/60 p-3">
+        <form onSubmit={salvar} className="space-y-3">
+          <Campo label="Nome do sabor">
+            <input autoFocus className="adm-input px-3" value={nome} maxLength={80} onChange={(e) => setNome(e.target.value)} />
+          </Campo>
+          <div className="grid grid-cols-2 gap-2">
+            <Campo label="Preço próprio (R$)">
+              <input className="adm-input px-3" inputMode="decimal" placeholder="Do produto" value={preco} onChange={(e) => setPreco(limparPreco(e.target.value))} />
+            </Campo>
+            <Campo label="Promoção (R$)">
+              <input className="adm-input px-3" inputMode="decimal" placeholder="Opcional" value={promo} onChange={(e) => setPromo(limparPreco(e.target.value))} />
+            </Campo>
+          </div>
+          <p className="text-xs text-texto-3">Vazio = usa o preço do produto.</p>
+          {erro && <p className="text-sm text-red-300">{erro}</p>}
+          <div className="flex justify-end gap-2">
+            <button type="button" className="adm-btn adm-btn-ghost px-4" onClick={() => setEditando(false)}>
+              Cancelar
+            </button>
+            <button type="submit" className="botao-ouro adm-btn px-5 font-bold">
+              Salvar
+            </button>
+          </div>
+        </form>
+      </li>
+    );
 
   return (
     <li className="flex items-center gap-1 rounded-xl border border-borda bg-fundo/60 py-1 pl-3 pr-1">
-      {editando ? (
-        <form onSubmit={salvar} className="flex min-w-0 flex-1 items-center gap-2 py-1">
-          <input
-            autoFocus
-            className="adm-input px-3"
-            value={nome}
-            maxLength={80}
-            onChange={(e) => setNome(e.target.value)}
-            onBlur={() => salvar()}
-            aria-label="Nome do sabor"
-          />
-        </form>
-      ) : (
-        <button type="button" onClick={() => setEditando(true)} className="flex min-h-11 min-w-0 flex-1 items-center gap-2 text-left" aria-label={`Renomear ${f.name}`}>
-          <span className="min-w-0">
-            <span className={`block break-words text-sm font-semibold uppercase tracking-wide ${f.available ? '' : 'text-texto-3 line-through'}`}>{f.name}</span>
-            <span className={`block text-[11px] font-semibold ${f.available ? 'text-[#34c759]' : 'text-amber-300'}`}>
-              {f.available ? 'Disponível' : 'Esgotado'}
-            </span>
+      <button type="button" onClick={abrir} className="flex min-h-11 min-w-0 flex-1 items-center gap-2 text-left" aria-label={`Editar ${f.name}`}>
+        <span className="min-w-0">
+          <span className={`block break-words text-sm font-semibold uppercase tracking-wide ${f.available ? '' : 'text-texto-3 line-through'}`}>{f.name}</span>
+          <span className="block text-[11px] font-semibold">
+            <span className={f.available ? 'text-[#34c759]' : 'text-amber-300'}>{f.available ? 'Disponível' : 'Esgotado'}</span>
+            {f.priceCents != null && (
+              <span className="text-ouro">
+                {' '}
+                · {f.promoCents != null ? `${brl(f.promoCents)} (de ${brl(f.priceCents)})` : brl(f.priceCents)}
+              </span>
+            )}
           </span>
-          <IconLapis className="h-3.5 w-3.5 shrink-0 text-texto-3" />
-        </button>
-      )}
+        </span>
+        <IconLapis className="h-3.5 w-3.5 shrink-0 text-texto-3" />
+      </button>
       <div className="flex shrink-0 items-center">
         {ordenando ? (
           <>
@@ -211,13 +266,21 @@ export default function ProductEdit() {
 
   async function salvar(e: FormEvent) {
     e.preventDefault();
-    if (!form.brandId) return toast('Cadastre uma marca antes (menu Marcas)', true);
+    if (!form.brandId) return toast('Cadastre uma categoria antes (menu Categorias)', true);
+    const priceCents = inputToCents(form.price);
+    const promoCents = inputToCents(form.promo);
+    const msg = erroPreco(priceCents, promoCents);
+    if (msg) return toast(msg, true);
     setSalvando(true);
     const body: Record<string, unknown> = {
       name: form.name,
       brandId: form.brandId,
       puffs: form.puffs.trim() === '' ? null : Number(form.puffs.replace(/\D/g, '')),
       series: form.series,
+      description: form.description,
+      featured: form.featured,
+      priceCents,
+      promoCents,
       active: form.active,
       noFlavor: form.noFlavor,
       inStock: form.inStock,
@@ -286,10 +349,11 @@ export default function ProductEdit() {
     }
   }
 
-  async function renomearSabor(f: Flavor, name: string) {
+  async function salvarSabor(f: Flavor, d: SaborDados) {
     try {
-      const r = await api<Flavor>(`admin/flavors/${f.id}`, { method: 'PATCH', body: { name } });
-      atualizarSabores((l) => l.map((x) => (x.id === f.id ? { ...x, name: r.name } : x)));
+      const r = await api<Flavor>(`admin/flavors/${f.id}`, { method: 'PATCH', body: d });
+      atualizarSabores((l) => l.map((x) => (x.id === f.id ? { ...x, ...r } : x)));
+      toast('Sabor salvo');
       reload();
       return true;
     } catch (err) {
@@ -351,7 +415,7 @@ export default function ProductEdit() {
 
   const foto = fotoNova || (produto?.photoUrl ? url(produto.photoUrl) : '');
   const disp = produto?.flavors.filter((f) => f.available).length ?? 0;
-  const linkProduto = `${location.origin}${import.meta.env.BASE_URL}sabores#${form.slug || 'link'}`;
+  const linkProduto = `${location.origin}${import.meta.env.BASE_URL}produto/${form.slug || 'link'}`;
 
   return (
     <div>
@@ -384,18 +448,35 @@ export default function ProductEdit() {
             <input className="adm-input px-3.5" required maxLength={80} value={form.name} onChange={(e) => set('name', e.target.value)} />
           </Campo>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Campo label="Marca (filtro)">
-              <select className="adm-input px-3" required value={form.brandId} onChange={(e) => set('brandId', e.target.value)}>
-                {brands.length === 0 && <option value="">Cadastre uma marca</option>}
+            <Campo label="Categoria">
+              <select
+                className="adm-input px-3"
+                required
+                value={form.brandId}
+                onChange={(e) => {
+                  const id = e.target.value;
+                  set('brandId', id);
+                  // Produto novo em categoria "outros" (acessórios…) começa sem sabores.
+                  if (novo) set('noFlavor', brands.find((b) => b.id === id)?.kind === 'outro');
+                }}
+              >
+                {brands.length === 0 && <option value="">Cadastre uma categoria</option>}
                 {brands.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
+                    {b.kind === 'outro' ? ' · outros' : ''}
                     {b.active ? '' : ' (oculta)'}
                   </option>
                 ))}
               </select>
             </Campo>
-            <Campo label="Puffs" dica="Vazio = sem selo de puffs">
+            <Campo label="Preço (R$)" dica="Vazio = “Consultar”">
+              <input className="adm-input px-3.5" inputMode="decimal" placeholder="Ex.: 89,90" value={form.price} onChange={(e) => set('price', limparPreco(e.target.value))} />
+            </Campo>
+            <Campo label="Preço promocional (R$)" dica="Opcional; mostra “de/por”">
+              <input className="adm-input px-3.5" inputMode="decimal" placeholder="Ex.: 79,90" value={form.promo} onChange={(e) => set('promo', limparPreco(e.target.value))} />
+            </Campo>
+            <Campo label="Puffs (opcional)" dica="Vazio = sem selo de puffs">
               <input
                 className="adm-input px-3.5"
                 inputMode="numeric"
@@ -404,7 +485,7 @@ export default function ProductEdit() {
                 onChange={(e) => set('puffs', e.target.value.replace(/\D/g, ''))}
               />
             </Campo>
-            <Campo label="Série (selo)">
+            <Campo label="Série (opcional)">
               <input className="adm-input px-3.5" maxLength={40} placeholder="Ex.: Slim Design" value={form.series} onChange={(e) => set('series', e.target.value)} />
             </Campo>
             <Campo label="Ordem" dica="Menor aparece primeiro">
@@ -417,6 +498,15 @@ export default function ProductEdit() {
               />
             </Campo>
           </div>
+          <Campo label="Descrição (opcional)">
+            <textarea
+              className="adm-input min-h-24 px-3.5 py-2.5"
+              maxLength={2000}
+              placeholder="Detalhes do produto, o que vem na caixa…"
+              value={form.description}
+              onChange={(e) => set('description', e.target.value)}
+            />
+          </Campo>
           <Campo label="Link do produto" dica={linkProduto}>
             <input
               className="adm-input px-3.5"
@@ -427,15 +517,16 @@ export default function ProductEdit() {
             />
           </Campo>
 
-          <LinhaSwitch titulo="Ativo" texto="Desligado, o produto some do catálogo." checked={form.active} onChange={(v) => set('active', v)} />
+          <LinhaSwitch titulo="Ativo" texto="Desligado, o produto some da loja." checked={form.active} onChange={(v) => set('active', v)} />
+          <LinhaSwitch titulo="Destaque" texto="Aparece em “Destaques” no início da loja." checked={form.featured} onChange={(v) => set('featured', v)} />
           <LinhaSwitch
-            titulo="Produto sem sabores"
-            texto="Mostra um botão “Fazer pedido” em vez dos sabores."
+            titulo="Sem sabores"
+            texto="Acessórios, essências etc.: compra direta, só com disponível/esgotado."
             checked={form.noFlavor}
             onChange={(v) => set('noFlavor', v)}
           />
           {form.noFlavor && (
-            <LinhaSwitch titulo="Em estoque" texto="Desligado, aparece “Indisponível no momento”." checked={form.inStock} onChange={(v) => set('inStock', v)} />
+            <LinhaSwitch titulo="Disponível" texto="Desligado, aparece como “Esgotado”." checked={form.inStock} onChange={(v) => set('inStock', v)} />
           )}
 
           {novo && !form.noFlavor && (
@@ -472,7 +563,7 @@ export default function ProductEdit() {
                 {disp} disponíveis · {produto.flavors.length - disp} esgotados
               </p>
             </div>
-            <p className="mb-3 text-xs text-texto-3">A chave verde mostra o sabor no catálogo; desligada, ele some na hora (esgotado). Toque no nome para renomear.</p>
+            <p className="mb-3 text-xs text-texto-3">Chave verde = disponível; desligada = esgotado (aparece riscado, sem preço e não pode ser comprado). Toque no sabor para renomear ou dar um preço próprio.</p>
 
             {produto.flavors.length > 1 && (
               <div className="mb-3 flex flex-wrap gap-2">
@@ -494,7 +585,7 @@ export default function ProductEdit() {
 
             {produto.flavors.length === 0 && (
               <p className="mb-3 rounded-xl border border-dashed border-white/10 p-4 text-center text-sm text-texto-3">
-                Nenhum sabor ainda: o card aparece como “Indisponível no momento”.
+                Nenhum sabor ainda: o produto aparece como “Esgotado”.
               </p>
             )}
             <ul className="mb-4 space-y-1.5">
@@ -505,7 +596,7 @@ export default function ProductEdit() {
                   primeiro={i === 0}
                   ultimo={i === produto.flavors.length - 1}
                   onToggle={(v) => alternarSabor(f, v)}
-                  onRename={(n) => renomearSabor(f, n)}
+                  onSave={(d) => salvarSabor(f, d)}
                   onDelete={() => excluirSabor(f)}
                   onMove={(d) => moverSabor(i, d)}
                   ordenando={ordenando}

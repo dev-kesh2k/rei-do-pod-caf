@@ -4,9 +4,16 @@ import { api, getToken, setToken } from '../../lib/api';
 import { logoUrl, useCatalog } from '../../lib/catalog';
 import { IconAjustes, IconCaixa, IconOlho, IconSair, IconTag } from '../../components/icons';
 
+const IconPreco = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
+    <path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+  </svg>
+);
+
 const ITENS = [
   { to: '/admin', end: true, label: 'Produtos', Icon: IconCaixa },
-  { to: '/admin/marcas', label: 'Marcas', Icon: IconTag },
+  { to: '/admin/precos', label: 'Preços', Icon: IconPreco },
+  { to: '/admin/categorias', label: 'Categorias', Icon: IconTag },
   { to: '/admin/ajustes', label: 'Ajustes', Icon: IconAjustes },
 ];
 
@@ -53,9 +60,9 @@ export default function AdminLayout() {
               {label}
             </NavLink>
           ))}
-          <a href={import.meta.env.BASE_URL + 'sabores'} target="_blank" rel="noopener" className={linkCls({ isActive: false })}>
+          <a href={import.meta.env.BASE_URL} target="_blank" rel="noopener" className={linkCls({ isActive: false })}>
             <IconOlho className="h-5 w-5" />
-            Ver catálogo
+            Ver loja
           </a>
         </nav>
         <div className="mt-auto border-t border-borda pt-4">
@@ -78,7 +85,7 @@ export default function AdminLayout() {
               </span>
             </Link>
             <div className="flex shrink-0 items-center">
-              <a href={import.meta.env.BASE_URL + 'sabores'} target="_blank" rel="noopener" className="adm-icon-btn" aria-label="Ver catálogo">
+              <a href={import.meta.env.BASE_URL} target="_blank" rel="noopener" className="adm-icon-btn" aria-label="Ver loja">
                 <IconOlho />
               </a>
               <button type="button" onClick={sair} className="adm-icon-btn" aria-label="Sair">
@@ -94,7 +101,7 @@ export default function AdminLayout() {
 
         {/* Barra inferior (celular/tablet) */}
         <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-borda bg-fundo/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
-          <div className="mx-auto grid max-w-md grid-cols-3">
+          <div className="mx-auto grid max-w-lg grid-cols-4">
             {ITENS.map(({ to, end, label, Icon }) => (
               <NavLink
                 key={to}

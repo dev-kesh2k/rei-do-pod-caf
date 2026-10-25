@@ -1,5 +1,5 @@
-export type Brand = { id: string; name: string; sortOrder: number; active: boolean; products: number };
-export type Flavor = { id: string; name: string; available: boolean; sortOrder: number };
+export type Brand = { id: string; name: string; kind: 'pod' | 'outro'; sortOrder: number; active: boolean; products: number };
+export type Flavor = { id: string; name: string; available: boolean; sortOrder: number; priceCents: number | null; promoCents: number | null };
 export type Product = {
   id: string;
   slug: string;
@@ -8,6 +8,10 @@ export type Product = {
   brand: { id: string; name: string };
   puffs: number | null;
   series: string;
+  description: string;
+  priceCents: number | null;
+  promoCents: number | null;
+  featured: boolean;
   photoUrl: string;
   sortOrder: number;
   active: boolean;

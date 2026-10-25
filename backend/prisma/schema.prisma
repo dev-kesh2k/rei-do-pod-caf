@@ -16,10 +16,11 @@ model User {
   createdAt    DateTime @default(now())
 }
 
-// Marca = botão de filtro no catálogo.
+// Categoria da loja: marca de pod (kind "pod") ou outro tipo de produto (kind "outro": acessórios, essências…).
 model Brand {
   id        String    @id @default(cuid())
   name      String    @unique
+  kind      String    @default("pod")
   sortOrder Int       @default(0)
   active    Boolean   @default(true)
   createdAt DateTime  @default(now())
@@ -34,6 +35,10 @@ model Product {
   brand        Brand    @relation(fields: [brandId], references: [id], onDelete: Restrict)
   puffs        Int?
   series       String   @default("")
+  description  String   @default("")
+  priceCents   Int? // sem preço = "Consultar"
+  promoCents   Int? // preço promocional (menor que priceCents)
+  featured     Boolean  @default(false) // aparece nos destaques do início
   photo        Bytes?
   photoMime    String   @default("")
   photoVersion Int      @default(0)
@@ -49,13 +54,15 @@ model Product {
 }
 
 model Flavor {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name      String
-  available Boolean  @default(true)
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String
+  available  Boolean  @default(true)
+  priceCents Int? // preço próprio do sabor (sobrepõe o do produto)
+  promoCents Int?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
 
   @@index([productId, sortOrder])
 }

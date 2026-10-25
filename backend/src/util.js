@@ -46,6 +46,22 @@ export function intOrNull(v, field, { min = 0, max = 10_000_000 } = {}) {
   return n;
 }
 
+/** Preço em centavos (inteiro) ou null. */
+export function cents(v, field) {
+  if (v === null || v === undefined || v === '') return null;
+  const n = Number(v);
+  if (!Number.isInteger(n) || n < 0 || n > 100_000_000) throw new HttpError(400, `${field} inválido`);
+  return n;
+}
+
+/** Valida o par preço/promoção (promoção só com preço e menor que ele). */
+export function pricePair(price, promo, what) {
+  if (promo != null && price == null) throw new HttpError(400, `${what}: informe o preço antes da promoção`);
+  if (promo != null && promo >= price) throw new HttpError(400, `${what}: o preço promocional precisa ser menor que o preço`);
+}
+
+export const KINDS = ['pod', 'outro'];
+
 export const bool = (v) => v === true || v === 'true' || v === 1;
 
 export function slugify(s) {
@@ -71,9 +87,11 @@ export function parseImage(dataUrl) {
 // ---------- Configurações ----------
 export const DEFAULT_SETTINGS = {
   whatsapp: '5545998078084',
-  msgFlavor: 'Olá! Gostaria de {produto} sabor {sabor}. Está disponível?',
-  msgProduct: 'Olá! Gostaria de {produto}. Está disponível?',
+  msgCart: 'Olá! Vim pelo site e quero fazer este pedido:',
+  msgCartEnd: 'Está disponível?',
   msgHelp: 'Olá! Vim pelo site e queria tirar uma dúvida.',
+  bannerTitle: 'O melhor pod do Paraná',
+  bannerText: 'Produtos 100% originais com a entrega mais rápida de Cafelândia e região.',
 };
 
 export async function getSettings() {

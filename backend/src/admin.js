@@ -1,5 +1,5 @@
 import express from 'express';
-import { prisma, wrap, HttpError, text, intOrNull, bool, slugify, parseImage, getSettings, DEFAULT_SETTINGS } from './util.js';
+import { prisma, wrap, HttpError, text, intOrNull, bool, slugify, parseImage, getSettings, DEFAULT_SETTINGS, cents, pricePair, KINDS } from './util.js';
 
 export const admin = express.Router();
 
@@ -29,12 +29,21 @@ async function productData(body, current) {
   const data = {};
   if (!current || 'name' in body) data.name = text(body.name, 'Nome', { max: 80 });
   if (!current || 'brandId' in body) {
-    const brandId = text(body.brandId, 'Marca', { max: 40 });
-    if (!(await prisma.brand.findUnique({ where: { id: brandId } }))) throw new HttpError(400, 'Marca não encontrada');
+    const brandId = text(body.brandId, 'Categoria', { max: 40 });
+    if (!(await prisma.brand.findUnique({ where: { id: brandId } }))) throw new HttpError(400, 'Categoria não encontrada');
     data.brandId = brandId;
   }
   if ('puffs' in body) data.puffs = intOrNull(body.puffs, 'Puffs', { max: 1_000_000 });
   if ('series' in body) data.series = text(body.series, 'Série', { max: 40, required: false });
+  if ('description' in body) data.description = text(body.description, 'Descrição', { max: 2000, required: false });
+  if ('featured' in body) data.featured = bool(body.featured);
+  if ('priceCents' in body) data.priceCents = cents(body.priceCents, 'Preço');
+  if ('promoCents' in body) data.promoCents = cents(body.promoCents, 'Preço promocional');
+  if ('priceCents' in body || 'promoCents' in body) {
+    const price = 'priceCents' in data ? data.priceCents : current?.priceCents ?? null;
+    const promo = 'promoCents' in data ? data.promoCents : current?.promoCents ?? null;
+    pricePair(price, promo, 'Produto');
+  }
   if ('active' in body) data.active = bool(body.active);
   if ('noFlavor' in body) data.noFlavor = bool(body.noFlavor);
   if ('inStock' in body) data.inStock = bool(body.inStock);
@@ -132,6 +141,32 @@ admin.delete(
   })
 );
 
+// Edição rápida de preços: vários produtos/sabores de uma vez (tudo ou nada).
+admin.put(
+  '/prices',
+  wrap(async (req, res) => {
+    const products = Array.isArray(req.body?.products) ? req.body.products : [];
+    const flavors = Array.isArray(req.body?.flavors) ? req.body.flavors : [];
+    if (!products.length && !flavors.length) throw new HttpError(400, 'Nada para salvar');
+    if (products.length + flavors.length > 2000) throw new HttpError(400, 'Itens demais de uma vez');
+    const ops = [];
+    for (const it of products) {
+      const priceCents = cents(it?.priceCents, 'Preço');
+      const promoCents = cents(it?.promoCents, 'Preço promocional');
+      pricePair(priceCents, promoCents, String(it?.name || 'Produto'));
+      ops.push(prisma.product.update({ where: { id: String(it.id) }, data: { priceCents, promoCents } }));
+    }
+    for (const it of flavors) {
+      const priceCents = cents(it?.priceCents, 'Preço do sabor');
+      const promoCents = cents(it?.promoCents, 'Promoção do sabor');
+      pricePair(priceCents, promoCents, String(it?.name || 'Sabor'));
+      ops.push(prisma.flavor.update({ where: { id: String(it.id) }, data: { priceCents, promoCents } }));
+    }
+    await prisma.$transaction(ops);
+    res.json({ ok: true, updated: ops.length });
+  })
+);
+
 // ---------- Sabores ----------
 admin.post(
   '/products/:id/flavors',
@@ -174,6 +209,13 @@ admin.patch(
     const data = {};
     if ('name' in (req.body || {})) data.name = text(req.body.name, 'Sabor', { max: 80 });
     if ('available' in (req.body || {})) data.available = bool(req.body.available);
+    if ('priceCents' in (req.body || {}) || 'promoCents' in (req.body || {})) {
+      const cur = await prisma.flavor.findUnique({ where: { id: req.params.id } });
+      if (!cur) throw new HttpError(404, 'Sabor não encontrado');
+      data.priceCents = 'priceCents' in req.body ? cents(req.body.priceCents, 'Preço do sabor') : cur.priceCents;
+      data.promoCents = 'promoCents' in req.body ? cents(req.body.promoCents, 'Promoção do sabor') : cur.promoCents;
+      pricePair(data.priceCents, data.promoCents, `Sabor ${cur.name}`);
+    }
     const f = await prisma.flavor.update({ where: { id: req.params.id }, data });
     res.json(f);
   })
@@ -202,9 +244,10 @@ admin.get(
 admin.post(
   '/brands',
   wrap(async (req, res) => {
-    const name = text(req.body?.name, 'Nome da marca', { max: 40 });
+    const name = text(req.body?.name, 'Nome da categoria', { max: 40 });
+    const kind = KINDS.includes(req.body?.kind) ? req.body.kind : 'pod';
     const last = await prisma.brand.aggregate({ _max: { sortOrder: true } });
-    const b = await prisma.brand.create({ data: { name, sortOrder: (last._max.sortOrder ?? 0) + 10 } });
+    const b = await prisma.brand.create({ data: { name, kind, sortOrder: (last._max.sortOrder ?? 0) + 10 } });
     res.status(201).json({ ...b, products: 0 });
   })
 );
@@ -213,7 +256,7 @@ admin.put(
   '/brands/order',
   wrap(async (req, res) => {
     const ids = Array.isArray(req.body?.ids) ? req.body.ids.map(String) : null;
-    if (!ids?.length) throw new HttpError(400, 'Lista de marcas vazia');
+    if (!ids?.length) throw new HttpError(400, 'Lista de categorias vazia');
     await prisma.$transaction(ids.map((id, i) => prisma.brand.update({ where: { id }, data: { sortOrder: (i + 1) * 10 } })));
     res.json({ ok: true });
   })
@@ -223,8 +266,12 @@ admin.put(
   '/brands/:id',
   wrap(async (req, res) => {
     const data = {};
-    if ('name' in (req.body || {})) data.name = text(req.body.name, 'Nome da marca', { max: 40 });
+    if ('name' in (req.body || {})) data.name = text(req.body.name, 'Nome da categoria', { max: 40 });
     if ('active' in (req.body || {})) data.active = bool(req.body.active);
+    if ('kind' in (req.body || {})) {
+      if (!KINDS.includes(req.body.kind)) throw new HttpError(400, 'Tipo de categoria inválido');
+      data.kind = req.body.kind;
+    }
     const b = await prisma.brand.update({ where: { id: req.params.id }, data, include: { _count: { select: { products: true } } } });
     const { _count, ...rest } = b;
     res.json({ ...rest, products: _count.products });
@@ -235,7 +282,7 @@ admin.delete(
   '/brands/:id',
   wrap(async (req, res) => {
     const count = await prisma.product.count({ where: { brandId: req.params.id } });
-    if (count) throw new HttpError(409, `Essa marca tem ${count} produto(s). Mude a marca deles ou exclua-os antes.`);
+    if (count) throw new HttpError(409, `Essa categoria tem ${count} produto(s). Mude a categoria deles ou exclua-os antes.`);
     await prisma.brand.delete({ where: { id: req.params.id } });
     res.json({ ok: true });
   })
@@ -260,16 +307,17 @@ admin.put(
       if (digits.length < 10 || digits.length > 15) throw new HttpError(400, 'WhatsApp inválido: use DDI + DDD + número (ex.: 5545998078084)');
       updates.whatsapp = digits;
     }
-    if ('msgFlavor' in body) {
-      updates.msgFlavor = text(body.msgFlavor, 'Mensagem do pedido com sabor', { max: 500 });
-      if (!updates.msgFlavor.includes('{produto}') || !updates.msgFlavor.includes('{sabor}'))
-        throw new HttpError(400, 'A mensagem do pedido com sabor precisa ter {produto} e {sabor}');
+    const limits = { msgCart: 300, msgCartEnd: 300, msgHelp: 500, bannerTitle: 60, bannerText: 200 };
+    const labels = {
+      msgCart: 'Início da mensagem do pedido',
+      msgCartEnd: 'Final da mensagem do pedido',
+      msgHelp: 'Mensagem do botão flutuante',
+      bannerTitle: 'Título do banner',
+      bannerText: 'Texto do banner',
+    };
+    for (const [k, max] of Object.entries(limits)) {
+      if (k in body) updates[k] = text(body[k], labels[k], { max, required: k !== 'msgCartEnd' });
     }
-    if ('msgProduct' in body) {
-      updates.msgProduct = text(body.msgProduct, 'Mensagem do pedido sem sabor', { max: 500 });
-      if (!updates.msgProduct.includes('{produto}')) throw new HttpError(400, 'A mensagem do pedido sem sabor precisa ter {produto}');
-    }
-    if ('msgHelp' in body) updates.msgHelp = text(body.msgHelp, 'Mensagem do botão flutuante', { max: 500 });
     await prisma.$transaction(
       Object.entries(updates)
         .filter(([k]) => k in DEFAULT_SETTINGS)

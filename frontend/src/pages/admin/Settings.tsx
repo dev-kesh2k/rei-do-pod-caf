@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { api, errorText } from '../../lib/api';
-import { logoUrl, mensagemPedido, useCatalog, waLink, type Settings as S } from '../../lib/catalog';
+import { logoUrl, useCatalog, waLink, type Settings as S } from '../../lib/catalog';
 import { resizeImage } from '../../lib/image';
 import { useToast } from '../../components/Toast';
 import { useTitulo } from '../../components/Site';
@@ -101,14 +101,16 @@ export default function Settings() {
   if (!s) return <div className="adm-card h-96 animate-pulse" />;
 
   const set = (k: keyof S, v: string) => setS((x) => (x ? { ...x, [k]: v } : x));
-  const exemplo = mensagemPedido(s, 'Ignite V55', 'MENTHOL');
+  const exemplo = [s.msgCart, '', '1) 2x Ignite V55 — MENTHOL — R$ 0,00 (exemplo)', '', '*Total: R$ 0,00*', s.msgCartEnd ? `\n${s.msgCartEnd}` : '']
+    .join('\n')
+    .trim();
 
   return (
     <div className="max-w-2xl space-y-5">
       <h1 className="font-display text-3xl font-extrabold uppercase sm:text-4xl">Ajustes</h1>
 
       <form onSubmit={salvar}>
-        <Bloco titulo="WhatsApp e pedido" texto="Para onde vão os pedidos tocados no catálogo.">
+        <Bloco titulo="WhatsApp e pedido" texto="Para onde vão os pedidos finalizados no carrinho.">
           <Campo label="Número do WhatsApp" dica="Com DDI e DDD, só números. Ex.: 5545998078084">
             <input
               className="adm-input px-3.5"
@@ -119,19 +121,16 @@ export default function Settings() {
               onChange={(e) => set('whatsapp', e.target.value.replace(/\D/g, ''))}
             />
           </Campo>
-          <Campo
-            label="Mensagem ao tocar num sabor"
-            dica={
-              <>
-                Use {'{produto}'} e {'{sabor}'}. Exemplo: “{exemplo}”
-              </>
-            }
-          >
-            <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={500} value={s.msgFlavor} onChange={(e) => set('msgFlavor', e.target.value)} />
+          <Campo label="Início da mensagem do pedido" dica="Vem antes da lista de itens do carrinho.">
+            <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={300} value={s.msgCart} onChange={(e) => set('msgCart', e.target.value)} />
           </Campo>
-          <Campo label="Mensagem de produto sem sabores" dica={<>Use {'{produto}'}.</>}>
-            <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={500} value={s.msgProduct} onChange={(e) => set('msgProduct', e.target.value)} />
+          <Campo label="Final da mensagem do pedido" dica="Vem depois do total (pode ficar vazio).">
+            <input className="adm-input px-3.5" maxLength={300} value={s.msgCartEnd} onChange={(e) => set('msgCartEnd', e.target.value)} />
           </Campo>
+          <div className="rounded-xl border border-borda bg-fundo/60 p-3">
+            <p className="mb-1 text-xs font-semibold text-texto-2">Prévia</p>
+            <p className="whitespace-pre-line break-words text-xs text-texto-3">{exemplo}</p>
+          </div>
           <Campo label="Mensagem do botão verde flutuante">
             <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={500} value={s.msgHelp} onChange={(e) => set('msgHelp', e.target.value)} />
           </Campo>
@@ -146,7 +145,23 @@ export default function Settings() {
         </Bloco>
       </form>
 
-      <Bloco titulo="Logo" texto="Aparece no topo do site e do painel. Use uma imagem quadrada.">
+      <form onSubmit={salvar}>
+        <Bloco titulo="Banner do início" texto="Título grande e texto do topo da loja. A última palavra do título fica dourada.">
+          <Campo label="Título">
+            <input className="adm-input px-3.5" maxLength={60} value={s.bannerTitle} onChange={(e) => set('bannerTitle', e.target.value)} />
+          </Campo>
+          <Campo label="Texto">
+            <textarea className="adm-input min-h-20 px-3.5 py-2.5" maxLength={200} value={s.bannerText} onChange={(e) => set('bannerText', e.target.value)} />
+          </Campo>
+          <div className="flex justify-end">
+            <button type="submit" disabled={salvando} className="botao-ouro adm-btn px-6 font-bold">
+              {salvando ? 'Salvando…' : 'Salvar'}
+            </button>
+          </div>
+        </Bloco>
+      </form>
+
+      <Bloco titulo="Logo" texto="Aparece no topo da loja e do painel. Use uma imagem quadrada.">
         <div className="flex items-center gap-4">
           <img src={logoUrl(logoV)} alt="Logo atual" className="h-20 w-20 shrink-0 rounded-full object-cover ring-1 ring-ouro/40" />
           <div className="min-w-0">

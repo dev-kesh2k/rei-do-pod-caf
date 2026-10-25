@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorText, url } from '../../lib/api';
-import { formatarPuffs, normalizar, useCatalog } from '../../lib/catalog';
+import { brl, normalizar, useCatalog } from '../../lib/catalog';
 import Switch from '../../components/Switch';
 import { useToast } from '../../components/Toast';
 import { useTitulo } from '../../components/Site';
@@ -95,8 +95,8 @@ export default function Products() {
             aria-label="Buscar produto ou sabor"
           />
         </div>
-        <select className="adm-input px-3 sm:w-48" value={marca} onChange={(e) => setMarca(e.target.value)} aria-label="Filtrar por marca">
-          <option value="">Todas as marcas</option>
+        <select className="adm-input px-3 sm:w-48" value={marca} onChange={(e) => setMarca(e.target.value)} aria-label="Filtrar por categoria">
+          <option value="">Todas as categorias</option>
           {brands.map((b) => (
             <option key={b.id} value={b.id}>
               {b.name}
@@ -146,8 +146,17 @@ export default function Products() {
                 <div className="min-w-0">
                   <p className="truncate font-display text-lg font-extrabold uppercase leading-tight sm:text-xl">{p.name}</p>
                   <p className="truncate text-xs text-texto-2">
-                    {p.brand.name}
-                    {p.puffs ? ` · ${formatarPuffs(p.puffs)}` : ''}
+                    {p.brand.name} ·{' '}
+                    {p.priceCents == null ? (
+                      'Consultar'
+                    ) : p.promoCents != null ? (
+                      <>
+                        <span className="line-through">{brl(p.priceCents)}</span> <span className="font-semibold text-ouro">{brl(p.promoCents)}</span>
+                      </>
+                    ) : (
+                      <span className="font-semibold text-texto">{brl(p.priceCents)}</span>
+                    )}
+                    {p.featured && ' · ★'}
                   </p>
                   <p className={`truncate text-xs font-medium ${semEstoque ? 'text-amber-300' : 'text-texto-3'}`}>
                     {p.noFlavor
@@ -155,6 +164,7 @@ export default function Products() {
                         ? 'Sem sabores · em estoque'
                         : 'Sem sabores · esgotado'
                       : `${disp}/${p.flavors.length} sabores disponíveis`}
+                    {p.flavors.some((f) => f.priceCents != null) && ' · preço por sabor'}
                     {!p.active && ' · inativo'}
                   </p>
                 </div>
@@ -176,7 +186,7 @@ export default function Products() {
       </ul>
       {list && list.length > 1 && !filtrando && (
         <p className="mt-4 text-center text-xs text-texto-3">
-          A ordem desta lista é a ordem do catálogo. No celular, mude a ordem dentro de cada produto.
+          A ordem desta lista é a ordem “Destaques da loja”. No celular, mude a ordem dentro de cada produto.
         </p>
       )}
     </div>
