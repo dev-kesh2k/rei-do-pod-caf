@@ -1,0 +1,75 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+// Marca = botão de filtro no catálogo.
+model Brand {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  sortOrder Int       @default(0)
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  slug         String   @unique // âncora do link direto (#v55)
+  name         String
+  brandId      String
+  brand        Brand    @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  puffs        Int?
+  series       String   @default("")
+  photo        Bytes?
+  photoMime    String   @default("")
+  photoVersion Int      @default(0)
+  sortOrder    Int      @default(0)
+  active       Boolean  @default(true)
+  noFlavor     Boolean  @default(false) // produto sem sabores: um botão "Fazer pedido"
+  inStock      Boolean  @default(true) // só vale para produto sem sabores
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  flavors      Flavor[]
+
+  @@index([sortOrder])
+}
+
+model Flavor {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  available Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId, sortOrder])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+// Imagens soltas do site (logo).
+model Asset {
+  key       String   @id
+  data      Bytes
+  mime      String
+  version   Int      @default(1)
+  updatedAt DateTime @updatedAt
+}

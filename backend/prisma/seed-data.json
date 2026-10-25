@@ -1,0 +1,1701 @@
+[
+ {
+  "slug": "v55",
+  "name": "Ignite V55",
+  "brand": "Ignite",
+  "puffs": 5500,
+  "series": "Ignite V55",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 10,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MORANGO E KIWI",
+    "available": true,
+    "sortOrder": 10
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "MELAO MIX",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "MORANGO E BANANA",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "ABACAXI ICE",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "MENTA MELÃO",
+    "available": true,
+    "sortOrder": 100
+   },
+   {
+    "name": "ICY MINT",
+    "available": true,
+    "sortOrder": 110
+   },
+   {
+    "name": "BLUEBERRY ICE",
+    "available": true,
+    "sortOrder": 120
+   }
+  ]
+ },
+ {
+  "slug": "v80",
+  "name": "Ignite V80",
+  "brand": "Ignite",
+  "puffs": 8000,
+  "series": "Black Series",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 20,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "BERGAMOTA LIMÃO MINT",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "UVA FRUTA E MENTA",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "UVA ICE",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "MARACUJA E KIWI",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "BANANA E CEREJA",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "MENTHOL",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "ICY MINT",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "CACTOS",
+    "available": false,
+    "sortOrder": 110
+   },
+   {
+    "name": "AÇAÍ ICE",
+    "available": false,
+    "sortOrder": 120
+   },
+   {
+    "name": "FROZEN MAÇÃ",
+    "available": false,
+    "sortOrder": 130
+   },
+   {
+    "name": "LIMÃO E MANGA",
+    "available": false,
+    "sortOrder": 140
+   }
+  ]
+ },
+ {
+  "slug": "v155",
+  "name": "Ignite V155",
+  "brand": "Ignite",
+  "puffs": 15500,
+  "series": "V155 Series",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 40,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MIRTILHO ICE",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "TROPICAL AÇAI",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "ICY MINT",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "MELANCIA E PITAYA",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "MORANGO E BANANA",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "MORANGO E MELANCIA ICE",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "MARACUJÁ",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "BANANA ICE",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": false,
+    "sortOrder": 110
+   },
+   {
+    "name": "MAÇA VERDE",
+    "available": false,
+    "sortOrder": 120
+   },
+   {
+    "name": "ABACAXI ICE",
+    "available": false,
+    "sortOrder": 130
+   },
+   {
+    "name": "UVA ICE",
+    "available": false,
+    "sortOrder": 140
+   },
+   {
+    "name": "MENTHOL",
+    "available": false,
+    "sortOrder": 150
+   },
+   {
+    "name": "MELANCIA MIX",
+    "available": true,
+    "sortOrder": 160
+   },
+   {
+    "name": "KIWI MARACUJÁ GOIABA",
+    "available": true,
+    "sortOrder": 170
+   }
+  ]
+ },
+ {
+  "slug": "v200",
+  "name": "Ignite V200",
+  "brand": "Ignite",
+  "puffs": 12000,
+  "series": "Airflow Control",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 50,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "FROZEN MELANCIA ICE",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "FROZEN ICY MINT",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "FROZEN MIRTILHO ICE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "FROZEN UVA ICE",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "FROZEN MORANGO E KIWI",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "FROZEN MORANGO BANANA",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "FROZEN MENTHOL",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "FROZEN MORANGO ICE",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "FROZEN ABACAXI ICE",
+    "available": false,
+    "sortOrder": 90
+   }
+  ]
+ },
+ {
+  "slug": "v300",
+  "name": "Ignite V300",
+  "brand": "Ignite",
+  "puffs": 30000,
+  "series": "Double Tank",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 70,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "UVA ICE",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "BANANA E COCO",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "PITAYA E MELANCIA",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "BANANA ICE",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "ICY MINT",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "ABACAXI E MANGA",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "ABACAXI ICE",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 100
+   },
+   {
+    "name": "MORANGO E BANANA",
+    "available": false,
+    "sortOrder": 110
+   },
+   {
+    "name": "MAÇA VERDE",
+    "available": false,
+    "sortOrder": 120
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": true,
+    "sortOrder": 130
+   },
+   {
+    "name": "CACTOS LIMÃO",
+    "available": false,
+    "sortOrder": 140
+   },
+   {
+    "name": "MIRTILHO",
+    "available": false,
+    "sortOrder": 150
+   },
+   {
+    "name": "ABACAXI KIWI PITAYA",
+    "available": true,
+    "sortOrder": 160
+   },
+   {
+    "name": "MENTA E MELÃO",
+    "available": true,
+    "sortOrder": 170
+   }
+  ]
+ },
+ {
+  "slug": "v400slim",
+  "name": "Ignite V400 Ice Slim",
+  "brand": "Ignite",
+  "puffs": 40000,
+  "series": "Slim Design",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 90,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "ICE MINT",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MARACUJÁ ICE",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MORANGO E KIWI ICE",
+    "available": false,
+    "sortOrder": 70
+   }
+  ]
+ },
+ {
+  "slug": "v400mix",
+  "name": "Ignite V400 Mix SLIM",
+  "brand": "Ignite",
+  "puffs": 40000,
+  "series": "Mixed Edition",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 100,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "KIWI MARACUJÁ GOIABA ICE + MORANGO ICE",
+    "available": true,
+    "sortOrder": 10
+   },
+   {
+    "name": "MORANGO KIWI ICE + UVA KIWI ICE",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "MENTHOL + MENTA MELÃO",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "ABACAXI + MARACUJÁ KIWI",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "CEREJA + UVA",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "BANANA CEREJA + UVA ICE",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "MELANCIA ICE + UVA ICE",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "ICY MINT + PÊSSEGO UVA",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "ICY MINT + MENTHOL",
+    "available": true,
+    "sortOrder": 90
+   }
+  ]
+ },
+ {
+  "slug": "shisha",
+  "name": "Ignite Shisha 40K",
+  "brand": "Ignite",
+  "puffs": 40000,
+  "series": "Shisha Blend",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 130,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MAÇÃ VERDE",
+    "available": true,
+    "sortOrder": 10
+   },
+   {
+    "name": "MELÃO MANGA",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "MIRTILHO LIMÃO ICE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "TRIPLE MINT",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "MELÃO ICE",
+    "available": false,
+    "sortOrder": 60
+   }
+  ]
+ },
+ {
+  "slug": "v100refil",
+  "name": "Refil Ignite P100",
+  "brand": "Ignite",
+  "puffs": 10000,
+  "series": "Refill System",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 140,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "ICY MINT",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "BANANA ICE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "MAÇA VERDE",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "MIRTILHO ICE",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "ABACAXI ICE",
+    "available": true,
+    "sortOrder": 90
+   },
+   {
+    "name": "KIT MENTHOL",
+    "available": true,
+    "sortOrder": 100
+   },
+   {
+    "name": "KIT ICY MINT",
+    "available": true,
+    "sortOrder": 110
+   },
+   {
+    "name": "KIT UVA ICE",
+    "available": true,
+    "sortOrder": 120
+   },
+   {
+    "name": "KIT MELANCIA ICE",
+    "available": true,
+    "sortOrder": 130
+   },
+   {
+    "name": "KIT MORANGO",
+    "available": true,
+    "sortOrder": 140
+   }
+  ]
+ },
+ {
+  "slug": "liferef20k",
+  "name": "Refil Life Pod 20K",
+  "brand": "Life Pod",
+  "puffs": 20000,
+  "series": "Refil 20K",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 160,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MAÇÃ UVA ICE",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "MIRTILHO E CHICLETE",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "UVA E CHICLETE",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "CEREJA E CHICLETE",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "LOVE 66",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MELANCIA E CHICLETE",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "MENTA E CHICLETE",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "MAÇÃ VERDE",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "MORANGO CHICLETE",
+    "available": true,
+    "sortOrder": 100
+   },
+   {
+    "name": "MARACUJÁ CHICLETE",
+    "available": false,
+    "sortOrder": 110
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": false,
+    "sortOrder": 120
+   }
+  ]
+ },
+ {
+  "slug": "liferef10k",
+  "name": "Refil Life 10K",
+  "brand": "Life Pod",
+  "puffs": 10000,
+  "series": "Life Pod 10K",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 180,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "KIT MENTHOL",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "KIT BLACKBERRY",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "KIT UVA",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "MORANGO E MELANCIA",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "CANDY ICE",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "CEREJA LIMÃO ICE",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "MAÇÃ VERDE ICE",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "MELANCIA E PÊSSEGO ICE",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "LIMONADA",
+    "available": true,
+    "sortOrder": 90
+   },
+   {
+    "name": "POLAR ICE",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "UVA E CHICLETE",
+    "available": false,
+    "sortOrder": 110
+   },
+   {
+    "name": "SUMMER LOVE",
+    "available": true,
+    "sortOrder": 120
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": false,
+    "sortOrder": 130
+   },
+   {
+    "name": "BANANA E CHICLETE",
+    "available": true,
+    "sortOrder": 140
+   },
+   {
+    "name": "CEREJA E CHICLETE",
+    "available": true,
+    "sortOrder": 150
+   },
+   {
+    "name": "CAFE",
+    "available": true,
+    "sortOrder": 160
+   },
+   {
+    "name": "CAPPUCCINO",
+    "available": true,
+    "sortOrder": 170
+   },
+   {
+    "name": "MARACUJÁ MANGA ICE",
+    "available": false,
+    "sortOrder": 180
+   },
+   {
+    "name": "PÊSSEGO E MANGA",
+    "available": false,
+    "sortOrder": 190
+   },
+   {
+    "name": "MIRTILHO MINT",
+    "available": true,
+    "sortOrder": 200
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": false,
+    "sortOrder": 210
+   },
+   {
+    "name": "MELANCIA E CHICLETE",
+    "available": false,
+    "sortOrder": 220
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": false,
+    "sortOrder": 230
+   },
+   {
+    "name": "MARACUJÁ ICE",
+    "available": false,
+    "sortOrder": 240
+   },
+   {
+    "name": "LOVE 66",
+    "available": true,
+    "sortOrder": 250
+   },
+   {
+    "name": "BLUE RAZZ",
+    "available": true,
+    "sortOrder": 260
+   },
+   {
+    "name": "MAÇÃ VERMELHA",
+    "available": true,
+    "sortOrder": 270
+   }
+  ]
+ },
+ {
+  "slug": "lifepodfit",
+  "name": "Life Pod Fit 30K",
+  "brand": "Life Pod",
+  "puffs": 30000,
+  "series": "Fit Design",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 190,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MORANGO KIWI",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "CEREJA",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "LOVE 66",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "MORANGO CHICLETE",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "MELANCIA CHICLETE",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 70
+   }
+  ]
+ },
+ {
+  "slug": "v400life",
+  "name": "Life Pod 40K",
+  "brand": "Life Pod",
+  "puffs": 40000,
+  "series": "Extreme Life",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 200,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 10
+   },
+   {
+    "name": "LOVE 66",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "ENERGÉTICO",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "COCONUT",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "CEREJA MELANCIA",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MELANCIA E CHICLETE",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "MORANGO CHICLETE",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "SPERMINT",
+    "available": true,
+    "sortOrder": 90
+   },
+   {
+    "name": "BANANA CHICLETE",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "MELÃO",
+    "available": false,
+    "sortOrder": 110
+   }
+  ]
+ },
+ {
+  "slug": "lifepodsk",
+  "name": "Life Pod SK",
+  "brand": "Life Pod",
+  "puffs": null,
+  "series": "Special Edition",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 210,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "SPERMINT",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "ENERGÉTICO",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "MANGA",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "UVA E CHICLETE",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "BANANA",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "MORANGO E KIWI",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "MELANCIA",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "MARACUJÁ ICE",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "MARACUJÁ MANGA",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "LIMÃO",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "MELANCIA E CHICLETE",
+    "available": true,
+    "sortOrder": 110
+   },
+   {
+    "name": "CEREJA HALLS",
+    "available": true,
+    "sortOrder": 120
+   },
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 130
+   },
+   {
+    "name": "MAÇÃ VERDE",
+    "available": true,
+    "sortOrder": 140
+   },
+   {
+    "name": "MORANGO CHICLETE",
+    "available": true,
+    "sortOrder": 150
+   },
+   {
+    "name": "MINT HULLS",
+    "available": true,
+    "sortOrder": 160
+   }
+  ]
+ },
+ {
+  "slug": "elfbar",
+  "name": "Elfbar TE 30K",
+  "brand": "Elfbar",
+  "puffs": 30000,
+  "series": "Elfbar Official",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 220,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "HORTELÃ",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MENTHOL",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "ELF LOVE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "MORANGO E PÊSSEGO",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "SPERMINT",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "BABALU E UVA",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "GOIABA MARACUJA KIWI",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "AÇAÍ BANANA ICE",
+    "available": true,
+    "sortOrder": 90
+   },
+   {
+    "name": "MORANGO E BANANA",
+    "available": true,
+    "sortOrder": 100
+   },
+   {
+    "name": "CEREJA",
+    "available": true,
+    "sortOrder": 110
+   },
+   {
+    "name": "PÊSSEGO MANGA MELANCIA",
+    "available": true,
+    "sortOrder": 120
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": false,
+    "sortOrder": 130
+   },
+   {
+    "name": "ABACAXI ICE",
+    "available": true,
+    "sortOrder": 140
+   },
+   {
+    "name": "BABALU TUTI FRUIT",
+    "available": true,
+    "sortOrder": 150
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": false,
+    "sortOrder": 160
+   }
+  ]
+ },
+ {
+  "slug": "iceking",
+  "name": "Elfbar Ice King 40K",
+  "brand": "Elfbar",
+  "puffs": 40000,
+  "series": "Ice King",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 230,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "HAWAI",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MELAO UVA MENTHOL",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "MORANGO E MELANCIA",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "COCA COLA",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "MELANCIA",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "BABALU E UVA",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "PÊSSEGO",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "MAÇÃ VERDE",
+    "available": false,
+    "sortOrder": 80
+   }
+  ]
+ },
+ {
+  "slug": "blacksheep40k",
+  "name": "Black Sheep 40K",
+  "brand": "Outras",
+  "puffs": 40000,
+  "series": "Black Edition",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 240,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MORANGO E KIWI / FRESH MINT",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MORANGO KIWI / COCA COLA",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "UVA / MENTHOL",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "MANGA E LARANJA / MIRTILHO UVA",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "AÇAÍ MORANGO / AÇAÍ UVA",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "UVA / CEREJA",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MIRTILHO / MAÇÃ VERDE",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "KIWI UVA / ACAI MORANGO BANANA",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "UVA MANGA / FRESH MINT",
+    "available": true,
+    "sortOrder": 90
+   },
+   {
+    "name": "UVA / UVA",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "UVA / UVA MANGA",
+    "available": true,
+    "sortOrder": 110
+   },
+   {
+    "name": "AÇAÍ MORANGO / UVA MANGA 30k",
+    "available": false,
+    "sortOrder": 120
+   },
+   {
+    "name": "55K MARACUJA",
+    "available": false,
+    "sortOrder": 130
+   },
+   {
+    "name": "UVA / MARACUJA",
+    "available": false,
+    "sortOrder": 140
+   },
+   {
+    "name": "UVA / ENERGÉTICO",
+    "available": true,
+    "sortOrder": 150
+   },
+   {
+    "name": "FRESH MINT / MANGÁ LARANJA",
+    "available": true,
+    "sortOrder": 160
+   },
+   {
+    "name": "MARACUJÁ / MELANCIA MORANGO",
+    "available": false,
+    "sortOrder": 170
+   },
+   {
+    "name": "ICE UVA ICE MENTHOL",
+    "available": true,
+    "sortOrder": 180
+   },
+   {
+    "name": "ICE MELANCIA UVA / ICE ENERGÉTICO",
+    "available": false,
+    "sortOrder": 190
+   },
+   {
+    "name": "ICE UVA / ICE MORANGO KIWI",
+    "available": true,
+    "sortOrder": 200
+   },
+   {
+    "name": "ICE MORANGO MELANCIA / ICE MIAMI MINT",
+    "available": false,
+    "sortOrder": 210
+   }
+  ]
+ },
+ {
+  "slug": "instabar",
+  "name": "Insta Bar 15K",
+  "brand": "Outras",
+  "puffs": 15000,
+  "series": "Trending",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 250,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "COOL MINT",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "LARANJA MARACUJÁ GOIABA",
+    "available": true,
+    "sortOrder": 20
+   }
+  ]
+ },
+ {
+  "slug": "icity12k",
+  "name": "Icity 40K",
+  "brand": "Outras",
+  "puffs": 12000,
+  "series": "Urban Style",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 290,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "3,5 MORANGO E MELANCIA",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "3,5 FROZEN UVA",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "3,5 MIAMI MINT",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "4.0 ABACAXI ICR",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "4.0 ABACAXI ICE",
+    "available": true,
+    "sortOrder": 50
+   },
+   {
+    "name": "4.0 UVA ICE",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "4.0 MARACUJÁ",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "4.0 MENTHOL",
+    "available": false,
+    "sortOrder": 80
+   }
+  ]
+ },
+ {
+  "slug": "adalya50k",
+  "name": "Adalya 50K",
+  "brand": "Outras",
+  "puffs": 50000,
+  "series": "Sub-Zero",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 300,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "MENTHOL",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "UVA MINT",
+    "available": false,
+    "sortOrder": 20
+   },
+   {
+    "name": "MARACUJÁ",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "MIRTILHO E AMORA",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "MELÃO E MELACIA",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "HAWAII",
+    "available": true,
+    "sortOrder": 60
+   },
+   {
+    "name": "MORANGO SPLAH",
+    "available": false,
+    "sortOrder": 70
+   },
+   {
+    "name": "PUNKMAN",
+    "available": true,
+    "sortOrder": 80
+   },
+   {
+    "name": "ABACAXI",
+    "available": false,
+    "sortOrder": 90
+   },
+   {
+    "name": "FRUTAS AFRICAN",
+    "available": false,
+    "sortOrder": 100
+   },
+   {
+    "name": "PESSEGO E MANGA",
+    "available": false,
+    "sortOrder": 110
+   },
+   {
+    "name": "FRUITY SMOOTHIE",
+    "available": false,
+    "sortOrder": 120
+   },
+   {
+    "name": "MINT POINT",
+    "available": true,
+    "sortOrder": 130
+   }
+  ]
+ },
+ {
+  "slug": "lostyvape10k",
+  "name": "Losty Vape 10K",
+  "brand": "Outras",
+  "puffs": 10000,
+  "series": "Losty Vape",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 330,
+  "createdAt": "2026-09-25T19:16:40.893863+00:00",
+  "flavors": [
+   {
+    "name": "UVA",
+    "available": false,
+    "sortOrder": 10
+   },
+   {
+    "name": "MORANGO",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "MAÇÃ VERDE",
+    "available": false,
+    "sortOrder": 30
+   },
+   {
+    "name": "PÊSSEGO MANGA E MELANCIA",
+    "available": false,
+    "sortOrder": 40
+   },
+   {
+    "name": "FRAMBOESA",
+    "available": false,
+    "sortOrder": 50
+   },
+   {
+    "name": "KIWI MARACUJÁ GOIABA",
+    "available": false,
+    "sortOrder": 60
+   },
+   {
+    "name": "MIAMI MINT",
+    "available": true,
+    "sortOrder": 70
+   },
+   {
+    "name": "ABACAXI LIMONADA",
+    "available": false,
+    "sortOrder": 80
+   },
+   {
+    "name": "LUSH ICE",
+    "available": true,
+    "sortOrder": 90
+   },
+   {
+    "name": "KIWI",
+    "available": false,
+    "sortOrder": 100
+   }
+  ]
+ },
+ {
+  "slug": "life-kit",
+  "name": "LIFE POD KIT 10K",
+  "brand": "Life Pod",
+  "puffs": 10000,
+  "series": "KIT LIFE",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 340,
+  "createdAt": "2026-10-10T17:18:37.267204+00:00",
+  "flavors": [
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 10
+   },
+   {
+    "name": "UVA",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "BLACKBERRY",
+    "available": true,
+    "sortOrder": 30
+   }
+  ]
+ },
+ {
+  "slug": "kit-p100",
+  "name": "KIT IGNITE P100 10K",
+  "brand": "Ignite",
+  "puffs": 10000,
+  "series": "P100",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 350,
+  "createdAt": "2026-10-12T19:55:35.894011+00:00",
+  "flavors": [
+   {
+    "name": "MENTHOL",
+    "available": true,
+    "sortOrder": 10
+   },
+   {
+    "name": "UVA ICE",
+    "available": true,
+    "sortOrder": 20
+   },
+   {
+    "name": "MELANCIA ICE",
+    "available": true,
+    "sortOrder": 30
+   },
+   {
+    "name": "ICY MINT",
+    "available": true,
+    "sortOrder": 40
+   },
+   {
+    "name": "MORANGO ICE",
+    "available": true,
+    "sortOrder": 50
+   }
+  ]
+ },
+ {
+  "slug": "extreme-bar-30k",
+  "name": "EXTREME BAR 30K",
+  "brand": "Extreme Bar",
+  "puffs": 30000,
+  "series": "3D",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 360,
+  "createdAt": "2026-10-12T20:04:13.971125+00:00",
+  "flavors": [
+   {
+    "name": "UVA",
+    "available": true,
+    "sortOrder": 10
+   }
+  ]
+ },
+ {
+  "slug": "icity-35k",
+  "name": "ICITY 35K",
+  "brand": "Icity",
+  "puffs": 35000,
+  "series": "CT35",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 370,
+  "createdAt": "2026-10-12T20:09:25.865197+00:00",
+  "flavors": [
+   {
+    "name": "FROZEN UVA",
+    "available": true,
+    "sortOrder": 10
+   }
+  ]
+ },
+ {
+  "slug": "morfbar-20k",
+  "name": "MORFBAR 20K",
+  "brand": "Morfabar",
+  "puffs": 20000,
+  "series": "TOUCH 20K",
+  "active": true,
+  "noFlavor": false,
+  "inStock": true,
+  "sortOrder": 380,
+  "createdAt": "2026-10-12T20:10:58.408281+00:00",
+  "flavors": [
+   {
+    "name": "MIX DE MELAO COM GELO",
+    "available": true,
+    "sortOrder": 10
+   }
+  ]
+ }
+]
