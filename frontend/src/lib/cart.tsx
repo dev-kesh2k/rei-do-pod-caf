@@ -139,17 +139,9 @@ export function mensagemCarrinho(s: Settings, linhas: Linha[], extra: { nome?: s
     total > 0
       ? `*Total: ${brl(total)}*${consultar ? ` + ${consultar} ${consultar === 1 ? 'item' : 'itens'} a consultar` : ''}`
       : '*Total: a consultar*';
-  return [
-    s.msgCart,
-    '',
-    ...itens,
-    '',
-    linhaTotal,
-    extra.nome?.trim() ? `Nome: ${extra.nome.trim()}` : '',
-    extra.obs?.trim() ? `Obs.: ${extra.obs.trim()}` : '',
-    s.msgCartEnd ? `\n${s.msgCartEnd}` : '',
-  ]
-    .filter((x, i, a) => x !== '' || (i > 0 && a[i - 1] !== ''))
-    .join('\n')
-    .trim();
+  const dados = [extra.nome?.trim() ? `Nome: ${extra.nome.trim()}` : '', extra.obs?.trim() ? `Obs.: ${extra.obs.trim()}` : ''].filter(Boolean);
+  return [s.msgCart, itens.join('\n'), [linhaTotal, ...dados].join('\n'), s.msgCartEnd]
+    .map((b) => b.trim())
+    .filter(Boolean)
+    .join('\n\n');
 }
